@@ -10,8 +10,8 @@ from .settings import app_settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     redis_connection = redis.from_url(
-        app_settings.redis_url,
-        password=app_settings.redis_password,
+        app_settings.REDIS_URL,
+        password=app_settings.REDIS_PASSWORD,
         encoding="utf-8",
         decode_responses=True,
     )

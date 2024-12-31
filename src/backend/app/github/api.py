@@ -1,4 +1,5 @@
 import requests
+
 from app.settings import app_settings
 
 from .common.schemas import GitHubHandle
@@ -26,7 +27,7 @@ def create_repo_in_org(org_name: str, repo_name: str):
         },
         headers={
             "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {app_settings.github_pat_token}",
+            "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
             "X-GitHub-Api-Version": "2022-11-28",
         },
     )
@@ -42,7 +43,7 @@ def invite_collaborators_to_repo(
             f"https://api.github.com/repos/{org_name}/{repo_name}/collaborators/{collaborator}",
             headers={
                 "Accept": "application/vnd.github+json",
-                "Authorization": f"Bearer {app_settings.github_pat_token}",
+                "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
                 "X-GitHub-Api-Version": "2022-11-28",
             },
         )
@@ -62,7 +63,7 @@ def add_webhook_to_repo(org_name: str, repo_name: str):
         },
         headers={
             "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {app_settings.github_pat_token}",
+            "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
             "X-GitHub-Api-Version": "2022-11-28",
         },
     )
