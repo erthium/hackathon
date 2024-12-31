@@ -2,7 +2,7 @@ from typing import Annotated, Any
 
 import requests
 from app.logger import logger
-from app.settings import ENGINE_API_BASE_URL
+from app.settings import app_settings
 from fastapi import APIRouter, Body, Header
 from pydantic import TypeAdapter
 
@@ -36,7 +36,7 @@ async def handle_webhook_delivery(
                 try:
                     logger.info("Running engine")
                     response = requests.get(
-                        f"{ENGINE_API_BASE_URL}/{release_event.repository.owner.login}/{release_event.repository.name}/releases/{release_event.release.tag_name}",
+                        f"{app_settings.engine_api_base_url}/{release_event.repository.owner.login}/{release_event.repository.name}/releases/{release_event.release.tag_name}",
                     )
                     logger.info(response.json())
                 except Exception as e:
