@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - .:/hackathon-backend
+    depends_on:
+      - db
+      - cache
+  db:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    # volumes:
+    #   - .:/hackathon-db
+  cache:
+    # https://geshan.com.np/blog/2022/01/redis-docker/
+    image: redis:7.4-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    env_file:
+      - .env
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+
+volumes:
+  cache:
+    driver: local
