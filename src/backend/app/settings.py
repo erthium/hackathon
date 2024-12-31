@@ -7,7 +7,7 @@ DOTENV_PATH = os.path.join(os.path.dirname(__file__), "..", ".env")
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=DOTENV_PATH)
+    model_config = SettingsConfigDict(env_file=DOTENV_PATH, extra="ignore")
 
     GITHUB_PAT_TOKEN: str = "token"
     ENGINE_API_BASE_URL: str = "http://localhost:8001"
