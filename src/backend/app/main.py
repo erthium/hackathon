@@ -1,9 +1,12 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-
 from app import github
+from fastapi import Depends, FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi_limiter.depends import RateLimiter
 
-app = FastAPI()
+from .dependencies import RateLimitDep
+from .lifespan import lifespan
+
+app = FastAPI(lifespan=lifespan, dependencies=[RateLimitDep])
 
 app.include_router(github.github_router)
 
@@ -16,14 +19,10 @@ async def root():
 """
 
 
-# class WebhookBody(BaseModel):
-#     repository: object
-#     model_config = {"extra": "allow"}
+# from sqlalchemy import text
 
+# from .db import engine
 
-# @app.post("/")
-# async def webhook_ex(body: WebhookBody, x_github_event: Annotated[str, Header()]):
-#     print(x_github_event)
-#     print(json.dumps(body.repository, indent=2))
-#     if body.action == "created":
-#         subprocess.run(["gh", "repo", "clone", body.repository["clone_url"]])
+# with engine.connect() as conn:
+#     result = conn.execute(text("select 'hello world'"))
+#     print(result.all())

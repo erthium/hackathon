@@ -1,11 +1,19 @@
 import os
 
 from dotenv import find_dotenv, load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-dotenv_path = find_dotenv(".env")
-load_dotenv(dotenv_path)
+DOTENV_PATH = os.path.join(os.path.dirname(__file__), "..", ".env")
 
-GITHUB_PAT_TOKEN = os.getenv("GITHUB_PAT_TOKEN")
-ENGINE_API_BASE_URL = os.getenv("ENGINE_API_BASE_URL")
-assert GITHUB_PAT_TOKEN, "GITHUB_PAT_TOKEN is not set"
-assert ENGINE_API_BASE_URL, "ENGINE_API_BASE_URL is not set"
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=DOTENV_PATH, extra="ignore")
+
+    GITHUB_PAT_TOKEN: str = "token"
+    ENGINE_API_BASE_URL: str = "http://localhost:8001"
+    DB_URL: str = "postgresql://user:password@localhost:5432/db"
+    REDIS_URL: str = "redis://localhost"
+    REDIS_PASSWORD: str = "password"
+
+
+app_settings = Settings()
