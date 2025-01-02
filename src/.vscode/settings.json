@@ -1,5 +1,10 @@
 {
   "editor.codeActionsOnSave": {
     "source.unusedImports": "always"
+  },
+  "[python]": {
+    "editor.tabSize": 2,
+    "editor.indentSize": "tabSize",
+    "editor.defaultFormatter": "charliermarsh.ruff"
   }
 }

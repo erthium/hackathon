@@ -1,5 +1,4 @@
 import requests
-
 from app.settings import app_settings
 
 from .common.schemas import GitHubHandle
@@ -16,56 +15,56 @@ curl -L \
 
 
 def create_repo_in_org(org_name: str, repo_name: str):
-    response = requests.post(
-        "https://api.github.com/repos/ituai-deneme/deneme2/generate",
-        json={
-            "owner": org_name,
-            "name": repo_name,
-            "description": "",
-            "include_all_branches": False,
-            "private": True,
-        },
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-    )
+  response = requests.post(
+    "https://api.github.com/repos/ituai-deneme/deneme2/generate",
+    json={
+      "owner": org_name,
+      "name": repo_name,
+      "description": "",
+      "include_all_branches": False,
+      "private": True,
+    },
+    headers={
+      "Accept": "application/vnd.github+json",
+      "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  )
 
-    return response.json()
+  return response.json()
 
 
 def invite_collaborators_to_repo(
-    org_name: str, repo_name: str, collaborators: list[GitHubHandle]
+  org_name: str, repo_name: str, collaborators: list[GitHubHandle]
 ):
-    for collaborator in collaborators:
-        response = requests.put(
-            f"https://api.github.com/repos/{org_name}/{repo_name}/collaborators/{collaborator}",
-            headers={
-                "Accept": "application/vnd.github+json",
-                "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        )
+  for collaborator in collaborators:
+    response = requests.put(  # noqa: F841
+      f"https://api.github.com/repos/{org_name}/{repo_name}/collaborators/{collaborator}",
+      headers={
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    )
 
 
 def add_webhook_to_repo(org_name: str, repo_name: str):
-    response = requests.post(
-        f"https://api.github.com/repos/{org_name}/{repo_name}/hooks",
-        json={
-            "name": "web",
-            "active": True,
-            "events": ["push", "release"],
-            "config": {
-                "url": "https://imp-patient-evidently.ngrok-free.app/github/webhook",
-                "content_type": "json",
-            },
-        },
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-    )
+  response = requests.post(
+    f"https://api.github.com/repos/{org_name}/{repo_name}/hooks",
+    json={
+      "name": "web",
+      "active": True,
+      "events": ["push", "release"],
+      "config": {
+        "url": "https://imp-patient-evidently.ngrok-free.app/github/webhook",
+        "content_type": "json",
+      },
+    },
+    headers={
+      "Accept": "application/vnd.github+json",
+      "Authorization": f"Bearer {app_settings.GITHUB_PAT_TOKEN}",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  )
 
-    return response.json()
+  return response.json()

@@ -1,2 +1,2 @@
-from .events import *
-from .headers import *
+from .events import *  # noqa
+from .headers import *  # noqa

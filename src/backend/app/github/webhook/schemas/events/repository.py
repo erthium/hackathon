@@ -6,11 +6,11 @@ from .common import InstallationLite, Organization, Repository, User
 
 
 class RepositoryCreatedEvent(BaseModel):
-    action: Literal["created"]
-    repository: Repository
-    sender: User
-    installation: InstallationLite | None = None
-    organization: Organization | None = None
+  action: Literal["created"]
+  repository: Repository
+  sender: User
+  installation: InstallationLite | None = None
+  organization: Organization | None = None
 
 
 RepositoryEvent: TypeAlias = RepositoryCreatedEvent
