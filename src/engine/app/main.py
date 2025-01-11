@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from .commands.test import test
+from .commands import test
 
 app = FastAPI()
 
