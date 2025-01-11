@@ -1,0 +1,2 @@
+# https://docs.astral.sh/ruff/settings/#indent-width
+indent-width = 2

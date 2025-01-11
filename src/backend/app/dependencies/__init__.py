@@ -1,1 +1,1 @@
-from .rate_limit import *
+from .rate_limit import RateLimitDep  # noqa: F401

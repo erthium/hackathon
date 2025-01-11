@@ -1,1 +1,1 @@
-from .test import *
+from .test import test  # noqa: F401

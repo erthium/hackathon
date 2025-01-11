@@ -1,7 +1,6 @@
 from app import github
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from fastapi_limiter.depends import RateLimiter
 
 from .dependencies import RateLimitDep
 from .lifespan import lifespan
@@ -13,7 +12,7 @@ app.include_router(github.github_router)
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    return """
+  return """
     <a href="/redoc">redoc</a>
     <a href="/openapi.json">redoc</a>
 """
