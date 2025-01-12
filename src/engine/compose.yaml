@@ -1,0 +1,11 @@
+services:
+  engine:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENGINE_PORT: ${ENGINE_PORT}
+    ports:
+      - "${ENGINE_PORT}:${ENGINE_PORT}"
