@@ -25,9 +25,9 @@ COPY . .
 
 EXPOSE $ENGINE_PORT
 
-# dockerd & -> Run dockerd in background (unless, docker won't work)
+# dockerd-entrypoint.sh & -> Run dockerd in background (unless, docker won't work)
 # Then run the engine
-CMD dockerd & \
+CMD dockerd-entrypoint.sh & \
     fastapi \
     dev \
     --host 0.0.0.0 \
