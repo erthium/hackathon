@@ -9,3 +9,4 @@ services:
         ENGINE_PORT: ${ENGINE_PORT}
     ports:
       - "${ENGINE_PORT}:${ENGINE_PORT}"
+    privileged: true # Apparently DinD requires this

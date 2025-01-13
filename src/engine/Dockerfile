@@ -1,19 +1,23 @@
-FROM python:3.12-alpine
+FROM docker:27-dind
 
+# Take the ENGINE_PORT arg passed from compose.yaml,
+# and set the environment variable to use in CMD
 ARG ENGINE_PORT
 ENV ENGINE_PORT=$ENGINE_PORT
 
 WORKDIR /engine
 
-COPY requirements.txt .
+# Install python and pip (default version is 3.12.8 in alpine 3.21)
+RUN apk add --no-cache python3 py3-pip
 
-RUN apk add --no-cache gcc musl-dev linux-headers
-
+# Set up virtual environment
 # https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+# Copy requirements.txt and install the requirements
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # https://www.reddit.com/r/docker/comments/1chhie6/whats_up_with_the_dockerfiles_that_use_copy_twice/
@@ -21,7 +25,10 @@ COPY . .
 
 EXPOSE $ENGINE_PORT
 
-CMD fastapi \
+# dockerd & -> Run dockerd in background (unless, docker won't work)
+# Then run the engine
+CMD dockerd & \
+    fastapi \
     dev \
     --host 0.0.0.0 \
     --port $ENGINE_PORT
