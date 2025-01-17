@@ -56,14 +56,14 @@ class GameEngine:
     # Offensive Effects
     agent_state.attack += item.effect.attack_boost
     agent_state.critical_chance = min(agent_state.critical_chance + item.effect.critical_chance, 1)
-    agent_state.counter_attack_chance += min(agent_state.counter_attack_chance + item.effect.counter_attack_chance, 1)
-    agent_state.double_attack_chance += min(agent_state.double_attack_chance + item.effect.double_attack_chance, 1)
-    agent_state.steal_chance += min(agent_state.steal_chance + item.effect.steal_chance, 1)
+    agent_state.counter_attack_chance = min(agent_state.counter_attack_chance + item.effect.counter_attack_chance, 1)
+    agent_state.double_attack_chance = min(agent_state.double_attack_chance + item.effect.double_attack_chance, 1)
+    agent_state.steal_chance = min(agent_state.steal_chance + item.effect.steal_chance, 1)
 
     # Defensive Effects
     agent_state.defense += item.effect.defense_boost
-    agent_state.prevent_death_chance += min(agent_state.prevent_death_chance + item.effect.prevent_death_chance, 1)
-    agent_state.prevent_damage_chance += min(agent_state.prevent_damage_chance + item.effect.prevent_damage_chance, 1)
+    agent_state.prevent_death_chance = min(agent_state.prevent_death_chance + item.effect.prevent_death_chance, 1)
+    agent_state.prevent_damage_chance = min(agent_state.prevent_damage_chance + item.effect.prevent_damage_chance, 1)
     agent_state.thorns += item.effect.thorns
     agent_state.health = min(agent_state.health + item.effect.heal_percentage * agent_state.max_health, agent_state.max_health)
     agent_state.health = min(agent_state.health + item.effect.heal, agent_state.max_health)
