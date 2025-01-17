@@ -18,7 +18,7 @@ class ItemEffect:
   prevent_damage_chance: float = 0.0 # increases chance of preventing damage
   thorns: float = 0.0 # reflects a portion of damage back to attacker
   heal_percentage: float = 0.0 # heals the player by a percentage of damage taken
-  heal: int = 0 # heals the player by this amount
+  heal: float = 0 # heals the player by this amount
 
 
 @dataclass
@@ -235,7 +235,7 @@ class ActionType(Enum):
 @dataclass
 class Action:
   action_type: ActionType
-  used_item: Item = None
+  used_item: Item | None = None
 
 SKIP_ACTION = Action(ActionType.SKIP)
 
@@ -244,10 +244,10 @@ SKIP_ACTION = Action(ActionType.SKIP)
 class AgentState:
   # Base Stats
   name: str
-  max_health: int = 100
-  health: int = 100
-  base_attack: int = 10
-  base_defense: int = 5
+  max_health: float = 100
+  health: float = 100
+  base_attack: float = 10
+  base_defense: float = 5
   base_steal_chance: float = 0.4
 
   # Pre-battle Stats
@@ -261,7 +261,7 @@ class AgentState:
   steal_chance: float = 0.4
 
   # Defensive Stats
-  defense: int = 5
+  defense: float = 5
   prevent_death_chance: float = 0.0
   prevent_damage_chance: float = 0.0
   thorns: float = 0.0

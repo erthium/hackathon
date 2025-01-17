@@ -6,7 +6,7 @@ from base_agent import BaseAgent
 
 
 class GameEngine:
-  def __init__(self, agent_a: BaseAgent, agent_b: BaseAgent, seed: int = None):
+  def __init__(self, agent_a: BaseAgent, agent_b: BaseAgent, seed: int | None = None):
     self.agent_a: BaseAgent = agent_a
     self.agent_b: BaseAgent = agent_b
 
@@ -72,10 +72,22 @@ class GameEngine:
 
 
   def _calculate_stats(self, agent_state: AgentState, action: Action) -> AgentState:
+    # Clearing Base Stats
     agent_state.attack = agent_state.base_attack
     agent_state.defense = agent_state.base_defense
     agent_state.steal_chance = agent_state.base_steal_chance
 
+    # Clearing Offensive Stats
+    agent_state.critical_chance = 0.0
+    agent_state.counter_attack_chance = 0.0
+    agent_state.double_attack_chance = 0.0
+
+    # Clearing Defensive Stats
+    agent_state.prevent_death_chance = 0.0
+    agent_state.prevent_damage_chance = 0.0
+    agent_state.thorns = 0.0
+
+    # Apply Item Effects
     for item in agent_state.items:
 
       if item.is_usable:
@@ -83,6 +95,7 @@ class GameEngine:
 
       agent_state = self._apply_item_effects(agent_state, item)
 
+    # Apply Action Effects
     if action.action_type == ActionType.DEFEND:
       agent_state.defense *= 1.3
 
@@ -192,5 +205,5 @@ class GameEngine:
         print("-" * 50)
 
     # Game Over
-    winner: BaseAgent = self.agent_a_state if self.agent_a_state.health > 0 else self.agent_b_state
+    winner: AgentState = self.agent_a_state if self.agent_a_state.health > 0 else self.agent_b_state
     self.log.add_entry(f"{winner.name} wins the fight!")

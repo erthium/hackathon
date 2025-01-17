@@ -4,7 +4,7 @@ from typing import List
 from objects import AgentState, Action, Item
 
 class BaseAgent(ABC):
-  def __init__(self, name: str, seed: int = None):
+  def __init__(self, name: str, seed: int | None = None):
     self.name = name
     self.seed = seed
 
