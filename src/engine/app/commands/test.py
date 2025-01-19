@@ -4,9 +4,18 @@ import stat
 import subprocess
 import time
 
+from ..sandbox import build_and_run_sandbox
+
 
 # The current implementation is for testing purposes only
 def test(repo_owner: str, repo_name: str, release_tag: str):
+  docker_compose_up_process = build_and_run_sandbox()
+
+  if docker_compose_up_process.returncode != 0:
+    return docker_compose_up_process.stderr.decode()
+
+  return docker_compose_up_process.stdout.decode()
+
   repo_url = f"https://github.com/{repo_owner}/{repo_name}.git"
 
   os.mkdir(f"{repo_name}")

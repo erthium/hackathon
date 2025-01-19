@@ -1,0 +1,12 @@
+services:
+  engine:
+    env_file:
+      - .env
+    build:
+      context: .. # To be able to copy the sibling templates folder (from the parent directory)
+      dockerfile: ./engine/Dockerfile
+      args:
+        ENGINE_PORT: ${ENGINE_PORT}
+    ports:
+      - "${ENGINE_PORT}:${ENGINE_PORT}"
+    privileged: true # Apparently DinD requires this
