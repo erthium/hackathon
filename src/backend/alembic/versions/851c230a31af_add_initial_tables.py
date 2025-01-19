@@ -1,8 +1,8 @@
 """Add initial tables
 
-Revision ID: 45ab1e06595c
+Revision ID: 851c230a31af
 Revises: 
-Create Date: 2025-01-17 22:09:00.620988
+Create Date: 2025-01-19 19:56:37.289002
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '45ab1e06595c'
+revision: str = '851c230a31af'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,6 +32,8 @@ def upgrade() -> None:
     sa.Column('current_member_count', sa.Integer(), nullable=False),
     sa.Column('expected_member_count', sa.Integer(), nullable=False),
     sa.Column('registration_date', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['competition_id'], ['competitions.id'], use_alter=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('competition_id', 'name'),
@@ -59,6 +61,8 @@ def upgrade() -> None:
     sa.Column('registration_date', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('expiration_date', sa.DateTime(), nullable=False),
     sa.Column('status', postgresql.ENUM('ACTIVE', 'EXPRIED', 'USED', name='invitationstatus', create_type=False), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['team_id'], ['teams.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -69,6 +73,8 @@ def upgrade() -> None:
     sa.Column('status', postgresql.ENUM('PENDING', 'APPROVED', 'REJECTED', name='releasestatus', create_type=False), nullable=False),
     sa.Column('message', sa.String(), nullable=False),
     sa.Column('release_date', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['team_id'], ['teams.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('commit_id')
@@ -81,6 +87,8 @@ def upgrade() -> None:
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('registration_date', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['team_id'], ['teams.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('team_id', 'email'),

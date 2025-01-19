@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .mixins import IdMixin
+from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
   from .team import Team
@@ -24,7 +24,7 @@ Registration Date (UTC)
 """
 
 
-class User(Base, IdMixin):
+class User(Base, IdMixin, AuditMixin):
   __tablename__ = "users"
 
   team_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("teams.id"))

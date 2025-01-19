@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from .invitation_email_status import InvitationEmailStatus
 from .invitation_status import InvitationStatus
-from .mixins import IdMixin
+from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
   from .team import Team
@@ -27,7 +27,7 @@ Status: Active, Expired, Used
 """
 
 
-class Invitation(Base, IdMixin):
+class Invitation(Base, IdMixin, AuditMixin):
   __tablename__ = "invitations"
 
   team_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("teams.id"))

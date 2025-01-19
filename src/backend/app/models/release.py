@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .mixins import IdMixin
+from .mixins import AuditMixin, IdMixin
 from .release_status import ReleaseStatus
 
 if typing.TYPE_CHECKING:
@@ -22,7 +22,7 @@ Release Date (UTC)
 """
 
 
-class Release(Base, IdMixin):
+class Release(Base, IdMixin, AuditMixin):
   __tablename__ = "releases"
 
   commit_id: Mapped[str] = mapped_column(unique=True)

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .associations import team_user_association
 from .base import Base
-from .mixins import IdMixin
+from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
   from .competition import Competition
@@ -27,7 +27,7 @@ Registration Date (UTC)
 """
 
 
-class Team(Base, IdMixin):
+class Team(Base, IdMixin, AuditMixin):
   __tablename__ = "teams"
 
   competition_id: Mapped[uuid.UUID] = mapped_column(
