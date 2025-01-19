@@ -8,10 +8,10 @@ ENV PYTHONDONWRITEBYTECODE 1
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY rpg/requirements.txt rpg/requirements.txt
+COPY ./templates/rpg/requirements.txt rpg/requirements.txt
 
 RUN pip install -r rpg/requirements.txt
 
-COPY . .
+COPY ./templates/rpg rpg
 
 CMD python3 rpg/libs/test_runner.py

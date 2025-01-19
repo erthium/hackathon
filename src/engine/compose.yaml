@@ -3,8 +3,8 @@ services:
     env_file:
       - .env
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: .. # To be able to copy the sibling templates folder (from the parent directory)
+      dockerfile: ./engine/Dockerfile
       args:
         ENGINE_PORT: ${ENGINE_PORT}
     ports:
