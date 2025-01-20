@@ -2,11 +2,11 @@ import datetime
 import typing
 import uuid
 
+from app.objects.enums import CompetitionStatus
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .competition_status import CompetitionStatus
 from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:

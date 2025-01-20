@@ -2,12 +2,11 @@ import datetime
 import typing
 import uuid
 
+from app.objects.enums import InvitationEmailStatus, InvitationStatus
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .invitation_email_status import InvitationEmailStatus
-from .invitation_status import InvitationStatus
 from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:

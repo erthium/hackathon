@@ -4,7 +4,7 @@ from logging.config import fileConfig
 import alembic_postgresql_enum  # noqa: F401 # Required for PostgreSQL ENUM support
 import dotenv
 from alembic import context
-from app.models import Base  # noqa: F401 # __init__.py imports all models
+from app.entities import Base  # noqa: F401 # __init__.py imports all models
 from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides

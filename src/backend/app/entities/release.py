@@ -1,12 +1,12 @@
 import datetime
 import typing
 
+from app.objects.enums import ReleaseStatus
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 from .mixins import AuditMixin, IdMixin
-from .release_status import ReleaseStatus
 
 if typing.TYPE_CHECKING:
   from .team import Team
