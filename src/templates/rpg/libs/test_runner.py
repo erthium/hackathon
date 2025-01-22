@@ -1,13 +1,26 @@
-from test_agent import TestAgent
-from game import GameEngine
+import json
+import os
 
+from game import GameEngine
+from test_agent import TestAgent
+
+RESULSTS_DIR = "/repo/results"
+
+# Create the results directory if it does not exist
+os.makedirs(RESULSTS_DIR, exist_ok=True)
 
 # Example Usage
 # seed: any = "ituai"
-agent_a = TestAgent(name="AgentA")
-agent_b = TestAgent(name="AgentB")
-engine = GameEngine(agent_a=agent_a, agent_b=agent_b)
-engine.start(initial_money=100)
+
+with open(os.path.join(RESULSTS_DIR, "result.json"), "w") as f:
+  try:
+    agent_a = TestAgent(name="AgentA")
+    agent_b = TestAgent(name="AgentB")
+    engine = GameEngine(agent_a=agent_a, agent_b=agent_b)
+    engine.start(initial_money=100)
+    f.write(json.dumps({"success": True, "result": engine.log.show_log()}))
+  except Exception as e:
+    f.write(json.dumps({"success": False, "error": e}))
 
 """
 count = 10000

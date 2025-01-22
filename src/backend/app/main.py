@@ -1,4 +1,4 @@
-from app import github
+from app import engine, github
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
@@ -8,6 +8,7 @@ from .lifespan import lifespan
 app = FastAPI(lifespan=lifespan, dependencies=[RateLimitDep])
 
 app.include_router(github.github_router)
+app.include_router(engine.router)  # TODO: This is also rate limited, but should it be?
 
 
 @app.get("/", response_class=HTMLResponse)
