@@ -1,6 +1,6 @@
 import requests
 from app.objects.github import GitHubHandle
-from backend.app.core.settings import app_settings
+from app.core.settings import app_settings
 
 """
 curl -L \
