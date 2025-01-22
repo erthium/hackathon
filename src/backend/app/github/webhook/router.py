@@ -2,11 +2,11 @@ from typing import Annotated, Any
 
 import requests
 from app.logger import logger
+from app.objects.github import WebhookHeaders
+from app.objects.github.webhook_events import PushEvent, ReleaseEvent
 from app.settings import app_settings
 from fastapi import APIRouter, Body, Header
 from pydantic import TypeAdapter
-
-from .schemas import PushEvent, ReleaseEvent, WebhookHeaders
 
 router = APIRouter(prefix="/webhook", tags=["webhook"])
 

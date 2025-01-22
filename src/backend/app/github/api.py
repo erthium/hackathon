@@ -1,7 +1,6 @@
 import requests
+from app.objects.github import GitHubHandle
 from app.settings import app_settings
-
-from .common.schemas import GitHubHandle
 
 """
 curl -L \

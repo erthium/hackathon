@@ -1,7 +1,7 @@
+from app.objects.github import PrepareChallengePayload
 from fastapi import APIRouter
 
 from ..api import add_webhook_to_repo, create_repo_in_org, invite_collaborators_to_repo
-from .schemas import PrepareChallengePayload
 
 router = APIRouter(prefix="/actions", tags=["actions"])
 
