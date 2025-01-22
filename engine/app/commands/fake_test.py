@@ -1,9 +1,8 @@
 import json
 
+from app.objects.engine import EngineTestFailedResult, EngineTestResult
 from app.sandbox import build_and_run_sandbox
 from pydantic import TypeAdapter, ValidationError
-
-from common.schemas import EngineTestFailedResult, EngineTestResult
 
 
 async def fake_test() -> EngineTestResult:

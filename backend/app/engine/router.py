@@ -1,8 +1,7 @@
 from typing import Annotated
 
+from app.objects.engine import RunEngineResponse
 from fastapi import APIRouter, Body
-
-from common.schemas import RunEngineResponse
 
 router = APIRouter(prefix="/engine")
 

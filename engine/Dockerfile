@@ -25,7 +25,6 @@ COPY ./templates ./sandbox/templates
 
 # https://www.reddit.com/r/docker/comments/1chhie6/whats_up_with_the_dockerfiles_that_use_copy_twice/
 COPY ./engine .
-COPY ./common ./common
 
 EXPOSE $ENGINE_PORT
 

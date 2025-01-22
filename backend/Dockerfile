@@ -2,7 +2,8 @@ FROM python:3.12-alpine
 WORKDIR /backend
 RUN apk add --no-cache gcc musl-dev linux-headers
 EXPOSE 8000
-COPY ./backend/requirements.txt .
+
+COPY ./requirements.txt .
 
 # https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 ENV VIRTUAL_ENV=/opt/venv
@@ -15,6 +16,5 @@ RUN apk update && \
     apk add postgresql-dev
 
 RUN pip install -r requirements.txt
-COPY ./common ./common
-COPY ./backend .
+COPY . .
 CMD ["fastapi", "dev", "--host", "0.0.0.0", "--port", "8000"]

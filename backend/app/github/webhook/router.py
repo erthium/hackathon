@@ -3,14 +3,12 @@ from typing import Annotated, Any
 from urllib.parse import urljoin
 
 import httpx
-from app.core.db import app_settings
-from app.logger import logger
-from app.objects.github import WebhookHeaders
-from app.objects.github.webhook_events import PushEvent, ReleaseEvent
 from app.core.settings import app_settings
+from app.logger import logger
+from app.objects.engine import TestPayload
+from app.objects.github import WebhookHeaders
+from app.objects.github.webhook_events import PushEvent
 from fastapi import APIRouter, Body, Header
-
-from common.schemas import TestPayload
 
 router = APIRouter(prefix="/webhook", tags=["webhook"])
 

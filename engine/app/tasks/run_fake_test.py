@@ -3,9 +3,8 @@ from urllib.parse import urljoin
 
 import httpx
 from app.commands import fake_test
+from app.objects.engine import RunEngineResponse
 from app.settings import app_settings
-
-from common.schemas import RunEngineResponse
 
 
 async def run_fake_test() -> None:

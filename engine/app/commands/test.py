@@ -4,13 +4,12 @@ import shutil
 import stat
 import time
 
-from app.settings import app_settings
-
-from common.schemas import (
+from app.objects.engine import (
   EngineTestFailedResult,
   EngineTestResult,
   EngineTestSucceededResult,
 )
+from app.settings import app_settings
 
 
 # The current implementation is for testing purposes only

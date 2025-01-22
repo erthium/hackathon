@@ -3,9 +3,8 @@ from urllib.parse import urljoin
 
 import httpx
 from app.commands import test
+from app.objects.engine import RunEngineResponse
 from app.settings import app_settings
-
-from common.schemas import RunEngineResponse
 
 
 async def run_test(repo_owner: str, repo_name: str, commit_id: str) -> None:
