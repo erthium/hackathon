@@ -30,6 +30,16 @@ class ReleasePublishedEvent(BaseModel):
   organization: Organization | None = None
 
 
+class ReleaseReleasedEvent(BaseModel):
+  action: Literal["released"]
+  release: Release
+  repository: Repository
+  sender: User
+  installation: InstallationLite | None = None
+  organization: Organization | None = None
+
+
 ReleaseEvent: TypeAlias = Annotated[
-  ReleaseCreatedEvent | ReleasePublishedEvent, Field(discriminator="action")
+  ReleaseCreatedEvent | ReleasePublishedEvent | ReleaseReleasedEvent,
+  Field(discriminator="action"),
 ]

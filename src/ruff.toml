@@ -1,2 +1,6 @@
 # https://docs.astral.sh/ruff/settings/#indent-width
 indent-width = 2
+
+# Thanks to this, it's not necessary to write # noqd: F401 in every __init__.py file
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]

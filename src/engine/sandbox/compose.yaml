@@ -3,3 +3,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./results:/repo/results # Bind the results directory to the sandbox container

@@ -4,7 +4,6 @@ WORKDIR /repo
 
 # https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 ENV VIRTUAL_ENV=/opt/venv
-ENV PYTHONDONWRITEBYTECODE 1
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 

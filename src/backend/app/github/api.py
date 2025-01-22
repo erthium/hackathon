@@ -53,7 +53,7 @@ def add_webhook_to_repo(org_name: str, repo_name: str):
     json={
       "name": "web",
       "active": True,
-      "events": ["push", "release"],
+      "events": ["push"],
       "config": {
         "url": "https://imp-patient-evidently.ngrok-free.app/github/webhook",
         "content_type": "json",

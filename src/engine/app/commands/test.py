@@ -1,34 +1,49 @@
+import asyncio
 import os
 import shutil
 import stat
-import subprocess
 import time
 
-from ..sandbox import build_and_run_sandbox
+from app.settings import app_settings
+
+from common.schemas import (
+  EngineTestFailedResult,
+  EngineTestResult,
+  EngineTestSucceededResult,
+)
 
 
 # The current implementation is for testing purposes only
-def test(repo_owner: str, repo_name: str, release_tag: str):
-  docker_compose_up_process = build_and_run_sandbox()
+async def test(repo_owner: str, repo_name: str, commit_id: str) -> EngineTestResult:
+  github_username = app_settings.GITHUB_USERNAME
+  github_pat_token = app_settings.GITHUB_PAT_TOKEN
+  repo_url = f"https://{github_username}:{github_pat_token}@github.com/{repo_owner}/{repo_name}.git"
+  clone_dir = "/tmp/repo"
 
-  if docker_compose_up_process.returncode != 0:
-    return docker_compose_up_process.stderr.decode()
+  print("Cloning the repo...", flush=True)
 
-  return docker_compose_up_process.stdout.decode()
-
-  repo_url = f"https://github.com/{repo_owner}/{repo_name}.git"
-
-  os.mkdir(f"{repo_name}")
-
-  subprocess.run(
-    [
-      "git",
-      "clone",
-      repo_url,
-      "-b",
-      release_tag,
-    ]
+  git_clone_process = await asyncio.subprocess.create_subprocess_exec(
+    "git",
+    "clone",
+    repo_url,
+    clone_dir,
   )
+
+  await git_clone_process.wait()
+
+  if git_clone_process.returncode != 0:
+    return EngineTestFailedResult(error=f"Failed to clone the repo {repo_url}")
+
+  print("Checking out the commit...", flush=True)
+
+  git_checkout_process = await asyncio.subprocess.create_subprocess_exec(
+    "git",
+    "checkout",
+    commit_id,
+    cwd=clone_dir,
+  )
+
+  await git_checkout_process.wait()
 
   # Some Windows problems if I remember correctly
   def on_rmtree_exc(func, path, exc_info):
@@ -39,6 +54,8 @@ def test(repo_owner: str, repo_name: str, release_tag: str):
   # Without this, shutil.rmtree below doesn't work properly
   time.sleep(1)
 
-  shutil.rmtree(repo_name, onexc=on_rmtree_exc)
+  shutil.rmtree(clone_dir, onexc=on_rmtree_exc)
 
-  return {"message": f"Successfully cloned and deleted the repo {repo_url}"}
+  return EngineTestSucceededResult(
+    result=f"Successfully cloned and deleted the repo {repo_url}"
+  )
