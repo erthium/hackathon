@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from ..common.schemas import Team
+from .team import Team
 
 
 class PrepareChallengePayload(BaseModel):

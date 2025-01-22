@@ -49,6 +49,9 @@ We will use PostgreSQL as the database, publish on AWS RDS, will be updated/migr
 - Release ID: UUID, Unique
 - Commit ID
 - Status: Pending, Approved, Rejected
+- Score
+- Time Spent
+- Message Code: Error or success code
 - Message: Reason for rejection
 - Release Date (UTC)
 
@@ -59,6 +62,11 @@ We will use PostgreSQL as the database, publish on AWS RDS, will be updated/migr
 - End Date (UTC)
 - Status: Upcoming, Open, Ongoing, Completed
 - Winner Team ID: UUID, Nullable, Foreign Key
+- Template ID
+
+**Template information:**
+- Template ID: UUID, Unique
+- Template Name: Unique
 
 **Invitation information:**
 - Invitation Code: UUID, Unique
@@ -69,6 +77,18 @@ We will use PostgreSQL as the database, publish on AWS RDS, will be updated/migr
 - Registration Date (UTC)
 - Expiration Date (UTC)
 - Status: Active, Expired, Used
+
+**Evaluation information:**
+- Evaluation ID: UUID, Unique
+- Competition ID: UUID, Foreign Key
+- Team ID: UUID, Foreign Key
+- Score
+- Evaluation Date (UTC)
+- Time Spent
+- Message Code: Error or success code
+- Message: Reason for the score
+
+
 
 ## User Reachable Endpoint Structure
 

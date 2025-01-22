@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-GitHubHandle = str
+from .github_handle import GitHubHandle
 
 
 class Team(BaseModel):
