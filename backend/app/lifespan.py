@@ -4,7 +4,7 @@ import redis.asyncio as redis
 from fastapi import FastAPI
 from fastapi_limiter import FastAPILimiter
 
-from .settings import app_settings
+from app.core.settings import app_settings
 
 
 @asynccontextmanager

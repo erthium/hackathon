@@ -2,7 +2,7 @@ import os
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DOTENV_PATH = os.path.join(os.path.dirname(__file__), "..", ".env")
+DOTENV_PATH = os.path.join(os.path.dirname(__file__), "../..", ".env")
 
 
 class Settings(BaseSettings):

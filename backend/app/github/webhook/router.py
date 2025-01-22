@@ -3,11 +3,11 @@ from typing import Annotated, Any
 from urllib.parse import urljoin
 
 import httpx
-from app.db import app_settings
+from backend.app.core.db import app_settings
 from app.logger import logger
 from app.objects.github import WebhookHeaders
 from app.objects.github.webhook_events import PushEvent, ReleaseEvent
-from app.settings import app_settings
+from backend.app.core.settings import app_settings
 from fastapi import APIRouter, Body, Header
 
 from common.schemas import TestPayload
