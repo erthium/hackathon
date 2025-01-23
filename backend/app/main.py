@@ -1,9 +1,8 @@
-from app import engine, github
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
 
-from .dependencies import RateLimitDep
-from .lifespan import lifespan
+from app.dependencies import RateLimitDep
+from app.lifespan import lifespan
+from app import engine, github
 
 app = FastAPI(lifespan=lifespan, dependencies=[RateLimitDep])
 
@@ -11,18 +10,11 @@ app.include_router(github.github_router)
 app.include_router(engine.router)  # TODO: This is also rate limited, but should it be?
 
 
-@app.get("/", response_class=HTMLResponse)
-async def root():
-  return """
-    <a href="/redoc">redoc</a>
-    <a href="/openapi.json">redoc</a>
-"""
-
-
-# from sqlalchemy import text
-
-# from .db import engine
-
-# with engine.connect() as conn:
-#     result = conn.execute(text("select 'hello world'"))
-#     print(result.all())
+@app.get(
+  "/",
+  summary="Root",
+  description="Root endpoint",
+  response_description="Beneath this mask, there is more than flesh...",
+)
+def get_root():
+  return "V" # V for Vendetta
