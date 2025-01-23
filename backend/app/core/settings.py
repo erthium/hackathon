@@ -14,5 +14,7 @@ class Settings(BaseSettings):
   REDIS_URL: str = "redis://localhost"
   REDIS_PASSWORD: str = "password"
 
+  DEVELOPMENT: bool = False
+
 
 app_settings = Settings()
