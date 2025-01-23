@@ -36,7 +36,7 @@ class Invitation(Base, IdMixin, AuditMixin):
   )
   expiration_date: Mapped[datetime.datetime] = mapped_column(nullable=True)
 
-  user: Mapped["User"] = relationship(back_populates="invitations")
+  user: Mapped["User"] = relationship(back_populates="invitation")
 
   def __repr__(self):
     return f"<Invitation {self.id} {self.user.github_username}>"

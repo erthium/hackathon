@@ -10,6 +10,7 @@ from .base import Base
 from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
+  from .invitation import Invitation
   from .team import Team
 
 """
@@ -37,6 +38,7 @@ class User(Base, IdMixin, AuditMixin):
   password: Mapped[Optional[str]] = mapped_column(nullable=True, unique=True)
   registration_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
 
+  invitation: Mapped["Invitation"] = relationship(back_populates="user")
   team: Mapped["Team"] = relationship(back_populates="members")
 
   __table_args__ = (
