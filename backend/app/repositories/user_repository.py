@@ -5,8 +5,8 @@ User Repository: This repository will be used to interact with the database for 
 from typing import Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import User
-from dependencies.database import database_dep
 
 
 class UserRepository:

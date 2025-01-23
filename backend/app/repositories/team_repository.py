@@ -2,11 +2,11 @@
 Team Repository: This repository will be used to interact with the database for the Team entity.
 """
 
-from typing import Optional, List
+from typing import List, Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Team
-from dependencies.database import database_dep
 
 
 class TeamRepository:

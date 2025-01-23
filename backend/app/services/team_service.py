@@ -1,6 +1,5 @@
-from app.entities import Team
-from app.repositories import TeamRepository, get_team_repository
 from app.dependencies import database_dep
+from app.repositories import TeamRepository, get_team_repository
 
 
 class TeamService:

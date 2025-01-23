@@ -1,6 +1,5 @@
-from app.entities import User
-from app.repositories import UserRepository, get_user_repository
 from app.dependencies import database_dep
+from app.repositories import UserRepository, get_user_repository
 
 
 class UserService:

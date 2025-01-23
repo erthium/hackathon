@@ -1,6 +1,5 @@
-from app.entities import Release
-from app.repositories import ReleaseRepository, get_release_repository
 from app.dependencies import database_dep
+from app.repositories import ReleaseRepository, get_release_repository
 
 
 class ReleaseService:
