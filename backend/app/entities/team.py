@@ -21,8 +21,6 @@ Team ID: UUID, Unique
 Competition ID: UUID, Foreign Key
 Team Name: Predecided before invitation, unique for each competition
 GitHub Repository: Unique
-Current Member Count: Integer
-Expected Member Count: Integer
 Registration Date (UTC)
 """
 
@@ -36,10 +34,8 @@ class Team(Base, IdMixin, AuditMixin):
       use_alter=True,  # Since it forms a circular dependency
     )
   )
-  name: Mapped[str] = mapped_column()
-  github_repo: Mapped[str] = mapped_column(unique=True)
-  current_member_count: Mapped[int] = mapped_column()
-  expected_member_count: Mapped[int] = mapped_column()
+  name: Mapped[str] = mapped_column(nullable=False)
+  github_repo: Mapped[str] = mapped_column(unique=True, nullable=False)
   registration_date: Mapped[datetime.datetime] = mapped_column(
     server_default=func.now()
   )

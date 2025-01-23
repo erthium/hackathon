@@ -1,5 +1,6 @@
 import datetime
 import typing
+from typing import Optional
 
 from app.objects.enums import ReleaseStatus
 from sqlalchemy import ForeignKey
@@ -15,9 +16,11 @@ if typing.TYPE_CHECKING:
 Release information:
 
 Release ID: UUID, Unique
-Commit ID
-Status: Pending, Approved, Rejected
-Message: Reason for rejection
+Team ID: UUID, Foreign Key
+Commit ID: Unique
+Status: Pending (default), Approved, Rejected
+Message: Optional
+Score: Optional
 Release Date (UTC)
 """
 
@@ -25,10 +28,11 @@ Release Date (UTC)
 class Release(Base, IdMixin, AuditMixin):
   __tablename__ = "releases"
 
-  commit_id: Mapped[str] = mapped_column(unique=True)
   team_id: Mapped[str] = mapped_column(ForeignKey("teams.id"))
-  status: Mapped[ReleaseStatus] = mapped_column()
-  message: Mapped[str] = mapped_column()
+  commit_id: Mapped[str] = mapped_column(unique=True, nullable=False)
+  status: Mapped[ReleaseStatus] = mapped_column(default=ReleaseStatus.PENDING)
+  message: Mapped[Optional[str]] = mapped_column(nullable=True)
+  score: Mapped[Optional[float]] = mapped_column(nullable=True)
   release_date: Mapped[datetime.datetime] = (
     mapped_column()
   )  # Should be provided by GitHub's webhook

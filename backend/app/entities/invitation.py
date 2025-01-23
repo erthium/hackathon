@@ -3,43 +3,36 @@ import typing
 import uuid
 
 from app.objects.enums import InvitationEmailStatus, InvitationStatus
-from sqlalchemy import ForeignKey, func
+from sqlalchemy import ForeignKey, func, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
-  from .team import Team
+  from .user import User
 
 """
 Invitation information:
 
 Invitation Code: UUID, Unique
-Team ID: UUID, Foreign Key
-GitHub Username
-Email
-Invitation Email Status: Hasn't Sent, Sent, Had Error
-Registration Date (UTC)
-Expiration Date (UTC)
-Status: Active, Expired, Used
+User ID: UUID, Foreign Key
+Status: Active (default), Used, Expired
+Invitation Email Status: Not Sent (default), Sent, Had Error
+Expiration Date (UTC): Optional
 """
 
 
 class Invitation(Base, IdMixin, AuditMixin):
   __tablename__ = "invitations"
 
-  team_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("teams.id"))
-  github_username: Mapped[str] = mapped_column()
-  email: Mapped[str] = mapped_column()
-  invitation_email_status: Mapped[InvitationEmailStatus] = mapped_column()
-  registration_date: Mapped[datetime.datetime] = mapped_column(
-    server_default=func.now()
-  )
-  expiration_date: Mapped[datetime.datetime] = mapped_column()
-  status: Mapped[InvitationStatus] = mapped_column()
+  user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), unique=True, nullable=False)
+  invitation_code: Mapped[str] = mapped_column(unique=True, nullable=False)
+  status: Mapped[InvitationStatus] = mapped_column(default=InvitationStatus.ACTIVE)
+  invitation_email_status: Mapped[InvitationEmailStatus] = mapped_column(default=InvitationEmailStatus.NOT_SENT)
+  expiration_date: Mapped[datetime.datetime] = mapped_column(nullable=True)
 
-  team: Mapped["Team"] = relationship(back_populates="invitations")
+  user: Mapped["User"] = relationship(back_populates="invitations")
 
   def __repr__(self):
     return f"<Invitation {self.id} {self.github_username}>"

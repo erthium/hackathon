@@ -1,6 +1,7 @@
 import datetime
 import typing
 import uuid
+from typing import Optional
 
 from app.objects.enums import CompetitionStatus
 from sqlalchemy import ForeignKey, func
@@ -17,21 +18,21 @@ Competition information:
 
 Competition ID: UUID, Unique
 Competition Name: Unique
-Start Date (UTC)
-End Date (UTC)
-Status: Upcoming, Open, Ongoing, Completed
-Winner Team ID: UUID, Nullable, Foreign Key
+Start Date (UTC): Optional
+End Date (UTC): Optional
+Status: Upcoming (default), Ongoing, Ended
+Winner Team ID: Optional
 """
 
 
 class Competition(Base, IdMixin, AuditMixin):
   __tablename__ = "competitions"
 
-  name: Mapped[str] = mapped_column(unique=True)
-  start_date: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
-  end_date: Mapped[datetime.datetime] = mapped_column()
-  status: Mapped[CompetitionStatus] = mapped_column()
-  winner_team_id: Mapped[uuid.UUID] = mapped_column(
+  name: Mapped[str] = mapped_column(unique=True, nullable=False)
+  start_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
+  end_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
+  status: Mapped[CompetitionStatus] = mapped_column(default=CompetitionStatus.UPCOMING)
+  winner_team_id: Mapped[Optional[uuid.UUID]] = mapped_column(
     ForeignKey("teams.id"), nullable=True
   )
 
