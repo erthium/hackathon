@@ -6,11 +6,11 @@ from typing import Optional
 from uuid import UUID
 
 from app.entities import Competition
-from dependencies.database import DatabaseDep
+from dependencies.database import database_dep
 
 
 class CompetitionRepository:
-  def __init__(self, db: DatabaseDep):
+  def __init__(self, db: database_dep):
     self.db = db
 
   def create(self, name: str, start_date: str, end_date: str) -> Competition:
@@ -37,6 +37,9 @@ class CompetitionRepository:
     self.db.delete(competition)
     self.db.commit()
 
+  def get_all(self) -> list[Competition]:
+    return self.db.query(Competition).all()
 
-def get_competition_repository(db: DatabaseDep) -> CompetitionRepository:
+
+def get_competition_repository(db: database_dep) -> CompetitionRepository:
   return CompetitionRepository(db)

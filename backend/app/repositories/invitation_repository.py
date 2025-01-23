@@ -5,11 +5,11 @@ from typing import Optional
 from uuid import UUID
 
 from app.entities import Invitation
-from dependencies.database import DatabaseDep
+from dependencies.database import database_dep
 
 
 class InvitationRepository:
-  def __init__(self, db: DatabaseDep):
+  def __init__(self, db: database_dep):
     self.db = db
 
   def create(self, team_id: UUID, github_username: str, email: str) -> Invitation:
@@ -37,5 +37,5 @@ class InvitationRepository:
     self.db.commit()
 
 
-def get_invitation_repository(db: DatabaseDep) -> InvitationRepository:
+def get_invitation_repository(db: database_dep) -> InvitationRepository:
   return InvitationRepository(db)

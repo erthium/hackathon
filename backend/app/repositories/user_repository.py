@@ -6,15 +6,19 @@ from typing import Optional
 from uuid import UUID
 
 from app.entities import User
-from dependencies.database import DatabaseDep
+from dependencies.database import database_dep
 
 
 class UserRepository:
-  def __init__(self, db: DatabaseDep):
+  def __init__(self, db: database_dep):
     self.db = db
 
-  def create(self, email: str, password: str) -> User:
-    user = User(email=email, password=password)
+  def create(self, team_id: UUID, github_username: str, email: str) -> User:
+    user = User(
+      team_id=team_id,
+      github_username=github_username,
+      email=email,
+    )
     self.db.add(user)
     self.db.commit()
     self.db.refresh(user)
@@ -37,5 +41,5 @@ class UserRepository:
     self.db.commit()
 
 
-def get_user_repository(db: DatabaseDep) -> UserRepository:
+def get_user_repository(db: database_dep) -> UserRepository:
   return UserRepository(db)
