@@ -5,8 +5,8 @@ Competition Repository: This repository will be used to interact with the databa
 from typing import Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Competition
-from dependencies.database import database_dep
 
 
 class CompetitionRepository:

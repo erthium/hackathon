@@ -1,6 +1,5 @@
-from app.entities import Invitation
-from app.repositories import InvitationRepository, get_invitation_repository
 from app.dependencies import database_dep
+from app.repositories import InvitationRepository, get_invitation_repository
 
 
 class InvitationService:
