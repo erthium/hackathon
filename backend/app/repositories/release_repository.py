@@ -2,15 +2,15 @@
 Release Repository: This repository will be used to interact with the database for the Release entity.
 """
 
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Release
-from dependencies.database import DatabaseDep
 
 
 class ReleaseRepository:
-  def __init__(self, db: DatabaseDep):
+  def __init__(self, db: database_dep):
     self.db = db
 
   def create(self, version: str, release_date: str, description: str) -> Release:
@@ -37,6 +37,17 @@ class ReleaseRepository:
     self.db.delete(release)
     self.db.commit()
 
+  def get_latest_by_team_id(self, team_id) -> Optional[Release]:
+    return (
+      self.db.query(Release)
+      .filter(Release.team_id == team_id)
+      .order_by(Release.release_date.desc())
+      .first()
+    )
 
-def get_release_repository(db: DatabaseDep) -> ReleaseRepository:
+  def get_all_by_team_id(self, team_id) -> List[Release]:
+    return self.db.query(Release).filter(Release.team_id == team_id).all()
+
+
+def get_release_repository(db: database_dep) -> ReleaseRepository:
   return ReleaseRepository(db)
