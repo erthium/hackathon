@@ -65,7 +65,7 @@ class CompetitionService:
     for team in add_teams_request.teams:
       team_entity = self.__team_repository.create(competition.id, team.name)
       for user in team.members:
-        self.__user_repository.create(team_entity.id, user.github_username, user.email)
+        self.__user_repository.create(team_entity.id, team_entity.competition_id, user.github_username, user.email)
 
 
   async def __check_if_github_account_exist(self, github_username) -> bool:
