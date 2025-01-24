@@ -4,7 +4,7 @@ import uuid
 from typing import Optional
 
 from app.objects.enums import CompetitionStatus
-from sqlalchemy import ForeignKey, func
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
