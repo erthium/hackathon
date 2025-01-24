@@ -11,7 +11,7 @@ from app.objects.competition import (
 from app.objects.message_response import MessageResponse
 
 from app.dependencies.competition_service import competition_service_dep
-from utils.ErrorUtils import ErrorUtils
+from app.utils.error_utils import ErrorUtils
 
 router = APIRouter(
   prefix="/competition",
@@ -62,6 +62,18 @@ async def add_teams(request: Request, addTeamsRequest: AddTeamsRequest, competit
 async def start_competition(request: Request, startCompetitionRequest: StartCompetitionRequest, competition_service: competition_service_dep):
   try:
     return await competition_service.start(startCompetitionRequest)
+  except Exception as exception:
+    traceback.print_exc()
+    raise ErrorUtils.toHTTPException(exception)
+
+
+@router.post(
+  "/finish",
+  description="Finish a competition",
+)
+async def finish_competition(request: Request, finishCompetitionRequest: FinishCompetitionRequest, competition_service: competition_service_dep):
+  try:
+    return await competition_service.finish(finishCompetitionRequest)
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)

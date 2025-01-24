@@ -2,12 +2,27 @@ from fastapi import FastAPI
 
 from app.dependencies import RateLimitDep
 from app.lifespan import lifespan
-from app import engine, github
+from app.routers import (
+  user_router,
+  team_router,
+  competition_router,
+  invitation_router,
+  release_router,
+  github_router,
+)
 
-app = FastAPI(lifespan=lifespan, dependencies=[RateLimitDep])
 
-app.include_router(github.github_router)
-app.include_router(engine.router)  # TODO: This is also rate limited, but should it be?
+app = FastAPI(
+  lifespan=lifespan,
+  dependencies=[RateLimitDep]
+)
+
+app.include_router(user_router.router)
+app.include_router(team_router.router)
+app.include_router(competition_router.router)
+app.include_router(invitation_router.router)
+app.include_router(release_router.router)
+app.include_router(github_router.router)
 
 
 @app.get(

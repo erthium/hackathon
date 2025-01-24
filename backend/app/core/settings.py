@@ -9,8 +9,12 @@ class Settings(BaseSettings):
   model_config = SettingsConfigDict(env_file=DOTENV_PATH, extra="ignore")
 
   GITHUB_PAT_TOKEN: str = "token"
+  GITHUB_ORGANIZATION_NAME: str = "ituai-deneme"
+
   ENGINE_API_BASE_URL: str = "http://localhost:8001"
+  
   DB_URL: str = "postgresql://user:password@localhost:5432/db"
+  
   REDIS_URL: str = "redis://localhost"
   REDIS_PASSWORD: str = "password"
 
