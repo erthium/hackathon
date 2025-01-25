@@ -3,12 +3,11 @@ import typing
 import uuid
 from typing import Optional
 
+from app.entities.base import Base
+from app.entities.mixins import AuditMixin, IdMixin
 from app.objects.enums import CompetitionStatus
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from .base import Base
-from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
   from .team import Team
@@ -31,14 +30,24 @@ class Competition(Base, IdMixin, AuditMixin):
   name: Mapped[str] = mapped_column(unique=True, nullable=False)
   start_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
   end_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
-  status: Mapped[CompetitionStatus] = mapped_column(default=CompetitionStatus.UPCOMING)
+  status: Mapped[CompetitionStatus] = mapped_column(
+    default=CompetitionStatus.UPCOMING, init=False
+  )
   winner_team_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-    ForeignKey("teams.id"), nullable=True
+    ForeignKey("teams.id"), nullable=True, init=False
   )
 
   # Quotes provide forward referencing, preventing circular dependency: https://peps.python.org/pep-0484/#forward-references
-  winner_team: Mapped["Team | None"] = relationship(back_populates="competition")
-  teams: Mapped[list["Team"]] = relationship(back_populates="competition")
+  winner_team: Mapped["Team | None"] = relationship(
+    back_populates="competition",
+    foreign_keys=[winner_team_id],
+    init=False,
+  )
+  teams: Mapped[list["Team"]] = relationship(
+    back_populates="competition",
+    foreign_keys="Team.competition_id",
+    default_factory=list,
+  )
 
   def __repr__(self):
     return f"<Competition {self.id} {self.name}>"
