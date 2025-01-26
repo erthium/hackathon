@@ -2,18 +2,21 @@
 Competition Repository: This repository will be used to interact with the database for the Competition entity.
 """
 
+import datetime
 from typing import Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Competition
-from dependencies.database import database_dep
 
 
 class CompetitionRepository:
   def __init__(self, db: database_dep):
     self.db = db
 
-  def create(self, name: str, start_date: str, end_date: str) -> Competition:
+  def create(
+    self, name: str, start_date: datetime.datetime, end_date: datetime.datetime
+  ) -> Competition:
     competition = Competition(
       name=name,
       start_date=start_date,

@@ -2,11 +2,11 @@
 Team Repository: This repository will be used to interact with the database for the Team entity.
 """
 
-from typing import Optional, List
+from typing import List, Optional
 from uuid import UUID
 
-from app.entities import Team
-from dependencies.database import database_dep
+from app.dependencies.database import database_dep
+from app.entities import Competition, Team
 
 
 class TeamRepository:
@@ -14,9 +14,17 @@ class TeamRepository:
     self.db = db
 
   def create(self, competition_id: UUID, name: str) -> Team:
+    competition = (
+      self.db.query(Competition).filter(Competition.id == competition_id).first()
+    )
+
+    if competition is None:
+      raise ValueError(f"Competition with id {competition_id} does not exist")
+
     team = Team(
       competition_id=competition_id,
       name=name,
+      github_repo=f"{competition.name}-{name}",
     )
     self.db.add(team)
     self.db.commit()

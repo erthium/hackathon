@@ -32,4 +32,4 @@ app.include_router(github_router.router)
   response_description="Beneath this mask, there is more than flesh...",
 )
 def get_root():
-  return "V" # V for Vendetta
+  return "V"  # V for Vendetta

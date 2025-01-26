@@ -2,11 +2,11 @@
 Release Repository: This repository will be used to interact with the database for the Release entity.
 """
 
-from typing import Optional, List
+from typing import List, Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Release
-from dependencies.database import database_dep
 
 
 class ReleaseRepository:
@@ -38,7 +38,12 @@ class ReleaseRepository:
     self.db.commit()
 
   def get_latest_by_team_id(self, team_id) -> Optional[Release]:
-    return self.db.query(Release).filter(Release.team_id == team_id).order_by(Release.release_date.desc()).first()
+    return (
+      self.db.query(Release)
+      .filter(Release.team_id == team_id)
+      .order_by(Release.release_date.desc())
+      .first()
+    )
 
   def get_all_by_team_id(self, team_id) -> List[Release]:
     return self.db.query(Release).filter(Release.team_id == team_id).all()

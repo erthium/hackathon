@@ -1,11 +1,12 @@
 """
 Invitation Repository: This repository will be used to interact with the database for the Invitation entity.
 """
+
 from typing import Optional
 from uuid import UUID
 
+from app.dependencies.database import database_dep
 from app.entities import Invitation
-from dependencies.database import database_dep
 
 
 class InvitationRepository:
