@@ -13,12 +13,17 @@ class UserRepository:
   def __init__(self, db: database_dep):
     self.db = db
 
-  def create(self, team_id: UUID, competition_id: UUID, github_username: str, email: str) -> User:
+  def create(
+    self, team_id: UUID, competition_id: UUID, github_username: str, email: str
+  ) -> User:
     user = User(
       team_id=team_id,
       competition_id=competition_id,
       github_username=github_username,
       email=email,
+      username=None,
+      password=None,
+      registration_date=None,
     )
     self.db.add(user)
     self.db.commit()

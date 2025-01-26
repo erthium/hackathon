@@ -37,14 +37,21 @@ class Team(Base, IdMixin, AuditMixin):
   name: Mapped[str] = mapped_column(nullable=False)
   github_repo: Mapped[str] = mapped_column(unique=True, nullable=False)
   registration_date: Mapped[datetime.datetime] = mapped_column(
-    server_default=func.now()
+    server_default=func.now(), init=False
   )
 
-  competition: Mapped["Competition"] = relationship(back_populates="teams")
-  members: Mapped[list["User"]] = relationship(
-    secondary=team_user_association, back_populates="teams"
+  competition: Mapped["Competition"] = relationship(
+    back_populates="teams", foreign_keys=[competition_id], init=False
   )
-  releases: Mapped[list["Release"]] = relationship(back_populates="team")
+  members: Mapped[list["User"]] = relationship(
+    secondary=team_user_association,
+    back_populates="team",
+    default_factory=list,
+    init=False,
+  )
+  releases: Mapped[list["Release"]] = relationship(
+    back_populates="team", default_factory=list, init=False
+  )
 
   __table_args__ = (
     # Team name should be unique for each competition

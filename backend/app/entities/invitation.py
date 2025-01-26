@@ -34,9 +34,11 @@ class Invitation(Base, IdMixin, AuditMixin):
   invitation_email_status: Mapped[InvitationEmailStatus] = mapped_column(
     default=InvitationEmailStatus.NOT_SENT
   )
-  expiration_date: Mapped[datetime.datetime] = mapped_column(nullable=True)
+  expiration_date: Mapped[datetime.datetime] = mapped_column(
+    nullable=True, default=None
+  )
 
-  user: Mapped["User"] = relationship(back_populates="invitation")
+  user: Mapped["User"] = relationship(back_populates="invitation", init=False)
 
   def __repr__(self):
-    return f"<Invitation {self.id} {self.user.github_username}>"
+    return f"<Invitation {self.id} {self.user_id}>"

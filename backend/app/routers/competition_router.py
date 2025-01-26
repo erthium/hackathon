@@ -25,7 +25,7 @@ async def get_all_competitions(
   request: Request, competition_service: competition_service_dep
 ) -> GetAllResponse:
   try:
-    return await competition_service.get_all()
+    return competition_service.get_all()
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)
@@ -41,7 +41,7 @@ async def create_competition(
   competition_service: competition_service_dep,
 ):
   try:
-    return await competition_service.create(createCompetitionRequest)
+    return competition_service.create(createCompetitionRequest)
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)
@@ -57,7 +57,7 @@ async def add_teams(
   competition_service: competition_service_dep,
 ):
   try:
-    return await competition_service.add_teams(addTeamsRequest)
+    return competition_service.add_teams(addTeamsRequest)
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)
@@ -73,7 +73,7 @@ async def start_competition(
   competition_service: competition_service_dep,
 ):
   try:
-    return await competition_service.start(startCompetitionRequest)
+    return competition_service.start(startCompetitionRequest)
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)

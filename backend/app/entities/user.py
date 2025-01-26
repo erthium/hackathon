@@ -38,8 +38,8 @@ class User(Base, IdMixin, AuditMixin):
   password: Mapped[Optional[str]] = mapped_column(nullable=True, unique=True)
   registration_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
 
-  invitation: Mapped["Invitation"] = relationship(back_populates="user")
-  team: Mapped["Team"] = relationship(back_populates="members")
+  invitation: Mapped["Invitation"] = relationship(back_populates="user", init=False)
+  team: Mapped["Team"] = relationship(back_populates="members", init=False)
 
   __table_args__ = (
     # GitHub username should be unique for each competition
