@@ -22,7 +22,7 @@ export function CompetitionsList() {
 
   useEffect(() => {
     if (competitionsQuery.isSuccess) {
-      setSelectedCompetitionId(competitionsQuery.data.competitions[0].id);
+      setSelectedCompetitionId(competitionsQuery.data.competitions[0]?.id);
     }
   }, [competitionsQuery.data?.competitions, competitionsQuery.isSuccess]);
 

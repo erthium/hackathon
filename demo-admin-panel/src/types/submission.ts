@@ -1,30 +1,4 @@
-import datetime
-import typing
-from typing import Optional
-from uuid import UUID
-
-from app.objects.enums import ReleaseStatus
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from .base import Base
-from .mixins import AuditMixin, IdMixin
-
-if typing.TYPE_CHECKING:
-  from .team import Team
-
-"""
-Release information:
-
-Release ID: UUID, Unique
-Team ID: UUID, Foreign Key
-Commit ID: Unique
-Status: Pending (default), Approved, Rejected
-Message: Optional
-Score: Optional
-Release Date (UTC)
-"""
-
+/*
 
 class Release(Base, IdMixin, AuditMixin):
   __tablename__ = "releases"
@@ -48,3 +22,15 @@ class Release(Base, IdMixin, AuditMixin):
 
   def __repr__(self):
     return f"<Release {self.id} {self.commit_id}>"
+*/
+
+export type SubmissionStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type Submission = {
+  id: string;
+  team_id: string;
+  commit_id: string;
+  status: SubmissionStatus;
+  message: string | null;
+  score: number | null;
+  release_date: Date;
+};

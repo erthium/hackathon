@@ -15,7 +15,9 @@ async def run_engine(
   match payload.type:
     case "test":
       task_manager.enqueue_task(
-        lambda: run_test(payload.repo_owner, payload.repo_name, payload.commit_id)
+        lambda: run_test(
+          payload.repo_owner, payload.repo_name, payload.commit_id, payload.id
+        )
       )
       return "Results will be sent soon"
     case "evaluate":

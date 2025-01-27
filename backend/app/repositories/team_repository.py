@@ -40,6 +40,9 @@ class TeamRepository:
   def get_by_id(self, team_id: UUID) -> Optional[Team]:
     return self.db.query(Team).filter(Team.id == team_id).first()
 
+  def get_by_github_repo(self, github_repo: str) -> Optional[Team]:
+    return self.db.query(Team).filter(Team.github_repo == github_repo).first()
+
   def delete(self, team: Team):
     self.db.delete(team)
     self.db.commit()

@@ -2,6 +2,7 @@
 Release Repository: This repository will be used to interact with the database for the Release entity.
 """
 
+import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -13,11 +14,13 @@ class ReleaseRepository:
   def __init__(self, db: database_dep):
     self.db = db
 
-  def create(self, version: str, release_date: str, description: str) -> Release:
+  def create(
+    self, team_id: UUID, commit_id: str, release_date: datetime.datetime
+  ) -> Release:
     release = Release(
-      version=version,
+      commit_id=commit_id,
+      team_id=team_id,
       release_date=release_date,
-      description=description,
     )
     self.db.add(release)
     self.db.commit()
@@ -47,6 +50,9 @@ class ReleaseRepository:
 
   def get_all_by_team_id(self, team_id) -> List[Release]:
     return self.db.query(Release).filter(Release.team_id == team_id).all()
+
+  def get_all(self) -> List[Release]:
+    return self.db.query(Release).all()
 
 
 def get_release_repository(db: database_dep) -> ReleaseRepository:

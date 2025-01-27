@@ -1,10 +1,8 @@
-from fastapi import HTTPException
+from typing import Dict, List
+
 import requests
-from typing import List, Dict
-
-from app.dependencies import database_dep
 from app.core.settings import app_settings
-
+from app.dependencies import database_dep
 from app.entities import Competition, Team
 from app.objects.competition import (
   AddTeamsRequest,
@@ -27,10 +25,9 @@ from app.repositories import (
   get_team_repository,
   get_user_repository,
 )
+from app.utils import GitHubUtils
 from fastapi import HTTPException
 
-
-from app.utils import GitHubUtils
 
 class CompetitionService:
   def __init__(
@@ -101,7 +98,7 @@ class CompetitionService:
 
   def start(
     self, start_competition_request: StartCompetitionRequest
-  ) -> MessageResponse:
+  ) -> MessageResponse | HTTPException:
     self.__validate_template_repository(
       start_competition_request.template_repository_owner,
       start_competition_request.template_repository_name,
@@ -128,23 +125,40 @@ class CompetitionService:
         team_action_errors[team.name] = errors
 
     if len(team_action_errors) > 0:
-      entire_error_message = "\n".join([f"Team: {team_name}\nErrors: {', '.join(errors)}" for team_name, errors in team_action_errors.items()])
-      return HTTPException(status_code=400, detail=f"Failed to start the competition properly for the following teams:\n{entire_error_message}")
+      entire_error_message = "\n".join(
+        [
+          f"Team: {team_name}\nErrors: {', '.join(errors)}"
+          for team_name, errors in team_action_errors.items()
+        ]
+      )
+      return HTTPException(
+        status_code=400,
+        detail=f"Failed to start the competition properly for the following teams:\n{entire_error_message}",
+      )
 
     return MessageResponse(message="Competition started successfully")
 
-
-  def __validate_template_repository(self, template_repository_owner: str, template_repository_name: str) -> None:
-    does_repository_exist = GitHubUtils.check_if_repository_exists(template_repository_owner, template_repository_name)
+  def __validate_template_repository(
+    self, template_repository_owner: str, template_repository_name: str
+  ) -> None:
+    does_repository_exist = GitHubUtils.check_if_repository_exists(
+      template_repository_owner, template_repository_name
+    )
     if not does_repository_exist:
-      raise HTTPException(status_code=400, detail="Template repository does not exist or is private")
-
+      raise HTTPException(
+        status_code=400, detail="Template repository does not exist or is private"
+      )
 
   def __create_repository_name(self, competition: Competition, team: Team) -> str:
     return f"{competition.name}-{team.name}"
 
-
-  def __create_repo_for_team(self, team: Team, competition: Competition, template_repository_owner: str, template_repository_name: str) -> List:
+  def __create_repo_for_team(
+    self,
+    team: Team,
+    competition: Competition,
+    template_repository_owner: str,
+    template_repository_name: str,
+  ) -> List:
     errors: List = []
 
     # Create the repository
@@ -153,11 +167,11 @@ class CompetitionService:
       owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
       repo_name=team_repository_name,
       template_owner=template_repository_owner,
-      template_name=template_repository_name,
+      template_repo=template_repository_name,
     )
     if response.status_code != 200 or response.status_code != 201:
       errors.append(f"Failed to create repository '{team_repository_name}'")
-    
+
     # Send invitations to the team members
     team_members: List[str] = [user.github_username for user in team.members]
     failed_invitations: List[str] = []
@@ -170,8 +184,9 @@ class CompetitionService:
       if response.status_code != 200 or response.status_code != 201:
         failed_invitations.append(member)
     for member in failed_invitations:
-      errors.append(f"Failed to invite the team member '{member}' to the repository '{team_repository_name}'")
-
+      errors.append(
+        f"Failed to invite the team member '{member}' to the repository '{team_repository_name}'"
+      )
 
     # Save the repository name to the team
     team.github_repo = team_repository_name
@@ -184,6 +199,8 @@ class CompetitionService:
     )
     if response.status_code != 200 or response.status_code != 201:
       errors.append(f"Failed to add webhook to the repository '{team_repository_name}'")
+
+    return errors
 
   def finish(
     self, finish_competition_request: FinishCompetitionRequest

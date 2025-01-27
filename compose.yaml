@@ -1,3 +1,4 @@
 include:
   - backend/compose.yaml
   - engine/compose.yaml
+  # - demo-admin-panel/compose.yaml

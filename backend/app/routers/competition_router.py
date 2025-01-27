@@ -1,15 +1,15 @@
-from fastapi import APIRouter, Request
 import traceback
 
 from app.dependencies.competition_service import competition_service_dep
-from app.utils.error_utils import ErrorUtils
 from app.objects.competition import (
   AddTeamsRequest,
   CreateCompetitionRequest,
+  FinishCompetitionRequest,
   GetAllResponse,
   StartCompetitionRequest,
-  FinishCompetitionRequest,
 )
+from app.utils.error_utils import ErrorUtils
+from fastapi import APIRouter, Request
 
 router = APIRouter(
   prefix="/competition",
@@ -84,9 +84,13 @@ async def start_competition(
   "/finish",
   description="Finish a competition",
 )
-async def finish_competition(request: Request, finishCompetitionRequest: FinishCompetitionRequest, competition_service: competition_service_dep):
+async def finish_competition(
+  request: Request,
+  finishCompetitionRequest: FinishCompetitionRequest,
+  competition_service: competition_service_dep,
+):
   try:
-    return await competition_service.finish(finishCompetitionRequest)
+    return competition_service.finish(finishCompetitionRequest)
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)

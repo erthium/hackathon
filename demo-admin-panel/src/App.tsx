@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import { CompetitionsPage } from "./pages";
 import { Layout } from "./pages/layout";
+import { SubmissionsPage } from "./pages/submissions";
 
 const queryClient = new QueryClient();
 
@@ -9,7 +9,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Layout>
-        <CompetitionsPage />
+        <SubmissionsPage />
       </Layout>
     </QueryClientProvider>
   );

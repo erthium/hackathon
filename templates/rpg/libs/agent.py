@@ -5,7 +5,7 @@ from libs.base_agent import BaseAgent
 from libs.objects import Action, ActionType, AgentState, Item, PredefinedItems
 
 
-class TestAgent(BaseAgent):
+class Agent(BaseAgent):
   def prepare(self, initial_state: AgentState) -> List[Item]:
     requested_items: List[Item] = []
 

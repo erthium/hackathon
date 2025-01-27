@@ -1,8 +1,8 @@
 import json
 import os
 
-from game import GameEngine
-from test_agent import TestAgent
+from libs.game import GameEngine
+from libs.test_agent import TestAgent
 
 RESULSTS_DIR = "/repo/results"
 
