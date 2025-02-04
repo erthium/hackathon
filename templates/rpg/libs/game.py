@@ -1,8 +1,8 @@
 from typing import List
 import random
 
-from objects import AgentState, Log, PredefinedItems, Action, ActionType, Item, SKIP_ACTION
-from base_agent import BaseAgent
+from libs.objects import AgentState, Log, PredefinedItems, Action, ActionType, Item, SKIP_ACTION
+from libs.base_agent import BaseAgent
 
 
 class GameEngine:

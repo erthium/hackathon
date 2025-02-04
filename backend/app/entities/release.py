@@ -1,6 +1,7 @@
 import datetime
 import typing
 from typing import Optional
+from uuid import UUID
 
 from app.objects.enums import ReleaseStatus
 from sqlalchemy import ForeignKey
@@ -28,7 +29,7 @@ Release Date (UTC)
 class Release(Base, IdMixin, AuditMixin):
   __tablename__ = "releases"
 
-  team_id: Mapped[str] = mapped_column(ForeignKey("teams.id"))
+  team_id: Mapped[UUID] = mapped_column(ForeignKey("teams.id"))
   commit_id: Mapped[str] = mapped_column(unique=True, nullable=False)
   status: Mapped[ReleaseStatus] = mapped_column(
     default=ReleaseStatus.PENDING, init=False

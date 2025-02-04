@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class EngineTestSucceededResult(BaseModel):
   success: Literal[True] = True
   result: str
+  score: float  # Used for the demo, just to show this info can be returned
 
 
 class EngineTestFailedResult(BaseModel):

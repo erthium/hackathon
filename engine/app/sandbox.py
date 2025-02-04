@@ -47,6 +47,7 @@ async def build_and_run_sandbox() -> asyncio.subprocess.Process:
     )
 
   # Build was succesful, run the sandbox
+
   compose_up_process = await asyncio.subprocess.create_subprocess_exec(
     "docker",
     "compose",
@@ -56,6 +57,15 @@ async def build_and_run_sandbox() -> asyncio.subprocess.Process:
     stdout=asyncio.subprocess.PIPE,
     stderr=asyncio.subprocess.PIPE,
   )
+
+  ### This was a testing code that I planned the use for the demo.
+  ### It might be useful in the future, but for now, it'd better be commented out.
+  # try:
+  #   await asyncio.wait_for(compose_up_process.wait(), timeout=10)
+  # except TimeoutError:
+  #   # If the process takes more than 10 seconds, raise an error
+  #   compose_up_process.kill()
+  #   raise TimeoutError("The sandbox environment took too long to start")
 
   # Return the process whether an error occurred or not
   return compose_up_process

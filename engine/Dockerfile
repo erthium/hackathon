@@ -32,6 +32,6 @@ EXPOSE $ENGINE_PORT
 # Then run the engine
 CMD dockerd-entrypoint.sh & \
     fastapi \
-    dev \
+    run \
     --host 0.0.0.0 \
     --port $ENGINE_PORT

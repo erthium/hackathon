@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from objects import AgentState, Action, Item
+from libs.objects import Action, AgentState, Item
+
 
 class BaseAgent(ABC):
   def __init__(self, name: str, seed: int | None = None):
@@ -21,7 +22,9 @@ class BaseAgent(ABC):
     pass
 
   @abstractmethod
-  def act(self, agent_state: AgentState, opponent_state: AgentState, turn: int) -> Action:
+  def act(
+    self, agent_state: AgentState, opponent_state: AgentState, turn: int
+  ) -> Action:
     """
     This method is called each time the agent needs to make a decision.
     The agent should return an action to perform.
