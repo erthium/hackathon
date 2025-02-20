@@ -1,8 +1,8 @@
 from typing import List
 import random
 
-from base_agent import BaseAgent
-from objects import Action, ActionType, PredefinedItems, AgentState, Item
+from libs.base_agent import BaseAgent
+from libs.objects import Action, ActionType, PredefinedItems, AgentState, Item
 
 class TestAgent(BaseAgent):
   def prepare(self, initial_state: AgentState) -> List[Item]:
