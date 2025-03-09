@@ -3,5 +3,5 @@ from .engine_result import (
   EngineTestResult,
   EngineTestSucceededResult,
 )
-from .run_engine_payload import RunEnginePayload, TestPayload
+from .run_engine_payload import RunEnginePayload
 from .run_engine_response import RunEngineResponse

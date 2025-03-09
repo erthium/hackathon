@@ -1,10 +1,10 @@
 import uuid
 from urllib.parse import urljoin
-
+"""
 import httpx
 from app.commands import test
 from app.objects.engine import RunEngineResponse
-from app.settings import app_settings
+from engine.app.core.settings import app_settings
 
 
 async def run_test(repo_owner: str, repo_name: str, commit_id: str) -> None:
@@ -19,3 +19,4 @@ async def run_test(repo_owner: str, repo_name: str, commit_id: str) -> None:
     ),  # mode="json" is required for UUID serialization
   )
   print(backend_response.content, flush=True)
+"""

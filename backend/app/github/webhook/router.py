@@ -30,7 +30,7 @@ async def handle_webhook_delivery(
         engine_payload = TestPayload(
           id=fake_id,
           type="test",
-          repo_owner="ituai-deneme",
+          repo_owner=app_settings.GITHUB_OWNER,
           repo_name=push_event.repository.name,
           commit_id=push_event.after,
         )

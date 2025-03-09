@@ -1,8 +1,8 @@
 from typing import List
 import random
 
-from libs.objects import AgentState, Log, PredefinedItems, Action, ActionType, Item, SKIP_ACTION
-from libs.base_agent import BaseAgent
+from objects import AgentState, Log, PredefinedItems, Action, ActionType, Item, SKIP_ACTION
+from base_agent import BaseAgent
 
 
 class GameEngine:
@@ -200,8 +200,8 @@ class GameEngine:
         turn += 1
 
         print(f"Turn ended with {self.agent_a.name} having {self.agent_a_state.health} health and {self.agent_b.name} having {self.agent_b_state.health} health.")
-        print(f"{self.agent_a.name} has following items: {", ".join([item.name for item in self.agent_a_state.items])}")
-        print(f"{self.agent_b.name} has following items: {", ".join([item.name for item in self.agent_b_state.items])}")
+        #print(f"{self.agent_a.name} has following items: {", ".join([item.name for item in self.agent_a_state.items])}")
+        #print(f"{self.agent_b.name} has following items: {", ".join([item.name for item in self.agent_b_state.items])}")
         print("-" * 50)
 
     # Game Over

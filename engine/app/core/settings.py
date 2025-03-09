@@ -11,6 +11,8 @@ class Settings(BaseSettings):
   BACKEND_BASE_URL: str = ""
   GITHUB_USERNAME: str = ""
   GITHUB_PAT_TOKEN: str = ""
+  TEMPLATE_DIR: str = ""
+  DEVELOPMENT: bool = False
 
 
 app_settings = Settings()

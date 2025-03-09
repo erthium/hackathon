@@ -1,6 +1,6 @@
 import asyncio
 from typing import Callable, Coroutine
-
+from functools import lru_cache
 
 class TaskManager:
   def __init__(self, max_tasks: int) -> None:
@@ -30,3 +30,9 @@ class TaskManager:
       except Exception as e:
         print(e, flush=True)
         continue
+
+
+@lru_cache  # to always get the same singleton TaskManager instance
+def get_task_manager() -> TaskManager:
+  task_manager = TaskManager(max_tasks=1)
+  return task_manager

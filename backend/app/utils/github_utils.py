@@ -6,8 +6,9 @@ from app.objects.github import GitHubHandle
 class GitHubUtils:
   @staticmethod
   def create_repository(owner_name: str, repo_name: str) -> requests.Response:
+    github_owner = app_settings.GITHUB_OWNER
     response = requests.post(
-      "https://api.github.com/repos/ituai-deneme/deneme2/generate",
+      f"https://api.github.com/repos/{github_owner}/deneme2/generate",
       json={
         "owner": owner_name,
         "name": repo_name,
@@ -70,7 +71,7 @@ class GitHubUtils:
         "active": True,
         "events": ["push"],
         "config": {
-          "url": "https://imp-patient-evidently.ngrok-free.app/github/webhook",
+          "url": "{app_settings.WEBHOOK_URL}/github/webhook",
           "content_type": "json",
         },
       },

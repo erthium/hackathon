@@ -15,7 +15,7 @@ class CompetitionRepository:
     self.db = db
 
   def create(
-    self, name: str, start_date: datetime.datetime, end_date: datetime.datetime
+    self, name: str, start_date: Optional[datetime.datetime] = None, end_date: Optional[datetime.datetime] = None
   ) -> Competition:
     competition = Competition(
       name=name,

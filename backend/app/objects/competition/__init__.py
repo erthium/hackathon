@@ -1,5 +1,6 @@
 from .competition_info import CompetitionInfo
 from .create_competition_request import CreateCompetitionRequest
+from .create_competition_response import CreateCompetitionResponse
 from .add_teams_request import AddTeamsRequest, NecessaryUserInfo, NecessaryTeamInfo
 from .start_competition_request import StartCompetitionRequest
 from .finish_competition_request import FinishCompetitionRequest

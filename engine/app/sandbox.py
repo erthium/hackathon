@@ -2,6 +2,7 @@ import asyncio
 import os
 import subprocess
 from http import HTTPStatus
+from typing import List
 
 from fastapi import HTTPException
 
@@ -11,7 +12,7 @@ SANDBOX_COMPOSE_FILE_LOCATION = os.path.join(
 )
 
 
-async def build_and_run_sandbox() -> asyncio.subprocess.Process:
+async def build_and_run_sandbox(template_name: str, command_name: str, args: List[str]) -> asyncio.subprocess.Process:
   """Builds the sandbox environment using Docker Compose.
 
   Raises:
@@ -54,6 +55,9 @@ async def build_and_run_sandbox() -> asyncio.subprocess.Process:
     "-f",
     SANDBOX_COMPOSE_FILE_LOCATION,
     "up",
+    "-e", f"TEMPLATE_NAME={template_name}",
+    "-e", f"COMMAND_NAME={command_name}",
+    "-e", f"ARGS={','.join(args)}",
     stdout=asyncio.subprocess.PIPE,
     stderr=asyncio.subprocess.PIPE,
   )

@@ -4,9 +4,11 @@ from app.dependencies.competition_service import competition_service_dep
 from app.objects.competition import (
   AddTeamsRequest,
   CreateCompetitionRequest,
+  CreateCompetitionResponse,
   GetAllResponse,
   StartCompetitionRequest,
 )
+from app.objects.message_response import MessageResponse
 from app.utils.ErrorUtils import ErrorUtils
 from fastapi import APIRouter, Request
 
@@ -20,6 +22,7 @@ router = APIRouter(
   "/all",
   description="Get all competitions",
   response_description="List of competitions",
+  response_model=GetAllResponse,
 )
 async def get_all_competitions(
   request: Request, competition_service: competition_service_dep
@@ -34,12 +37,14 @@ async def get_all_competitions(
 @router.post(
   "/create",
   description="Create a competition with the team and user information",
+  response_description="Competition information",
+  response_model=CreateCompetitionResponse,
 )
 async def create_competition(
   request: Request,
   createCompetitionRequest: CreateCompetitionRequest,
   competition_service: competition_service_dep,
-):
+) -> CreateCompetitionResponse:
   try:
     return competition_service.create(createCompetitionRequest)
   except Exception as exception:
@@ -50,12 +55,13 @@ async def create_competition(
 @router.post(
   "/add_teams",
   description="Add teams to a competition",
+  response_model=MessageResponse,
 )
 async def add_teams(
   request: Request,
   addTeamsRequest: AddTeamsRequest,
   competition_service: competition_service_dep,
-):
+) -> MessageResponse:
   try:
     return competition_service.add_teams(addTeamsRequest)
   except Exception as exception:
@@ -66,12 +72,13 @@ async def add_teams(
 @router.post(
   "/start",
   description="Start a competition",
+  response_model=MessageResponse,
 )
 async def start_competition(
   request: Request,
   startCompetitionRequest: StartCompetitionRequest,
   competition_service: competition_service_dep,
-):
+) -> MessageResponse:
   try:
     return competition_service.start(startCompetitionRequest)
   except Exception as exception:

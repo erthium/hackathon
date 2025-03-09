@@ -8,6 +8,7 @@ from app.objects.competition import (
   AddTeamsRequest,
   CompetitionInfo,
   CreateCompetitionRequest,
+  CreateCompetitionResponse,
   FinishCompetitionRequest,
   GetAllResponse,
   NecessaryUserInfo,
@@ -54,12 +55,12 @@ class CompetitionService:
     self, create_competition_request: CreateCompetitionRequest
   ) -> MessageResponse:
     # ? What about this?
-    self.__competition_repository.create(
+    new_competition = self.__competition_repository.create(
       create_competition_request.name,
       create_competition_request.start_date,
       create_competition_request.end_date,
     )
-    return MessageResponse(message="Competition created successfully")
+    return CreateCompetitionResponse(competitions_id=new_competition.id)
 
   def add_teams(self, add_teams_request: AddTeamsRequest) -> MessageResponse:
     competition = self.__competition_repository.get_by_id(
@@ -164,7 +165,7 @@ class CompetitionService:
     # Create the repository
     team_repository_name = self.__create_repository_name(competition, team)
     response = GitHubUtils.create_repository_from_template(
-      owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+      owner_name=app_settings.GITHUB_OWNER,
       repo_name=team_repository_name,
       template_owner=template_repository_owner,
       template_repo=template_repository_name,
@@ -177,7 +178,7 @@ class CompetitionService:
     failed_invitations: List[str] = []
     for member in team_members:
       response = GitHubUtils.invite_collaborator_to_repository(
-        owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+        owner_name=app_settings.GITHUB_OWNER,
         repo_name=team_repository_name,
         collaborator=member,
       )
@@ -194,7 +195,7 @@ class CompetitionService:
 
     # Add webhook to the repository
     response = GitHubUtils.add_webhook_to_repository(
-      owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+      owner_name=app_settings.GITHUB_OWNER,
       repo_name=team_repository_name,
     )
     if response.status_code != 200 and response.status_code != 201:

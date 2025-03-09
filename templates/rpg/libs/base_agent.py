@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from libs.objects import Action, AgentState, Item
+from objects import Action, AgentState, Item
 
 
 class BaseAgent(ABC):

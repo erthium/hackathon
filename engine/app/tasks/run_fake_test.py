@@ -1,10 +1,11 @@
 import uuid
 from urllib.parse import urljoin
 
+"""
 import httpx
 from app.commands import fake_test
 from app.objects.engine import RunEngineResponse
-from app.settings import app_settings
+from engine.app.core.settings import app_settings
 
 
 async def run_fake_test() -> None:
@@ -19,3 +20,4 @@ async def run_fake_test() -> None:
     ),  # mode="json" is required for UUID serialization
   )
   print(backend_response.content, flush=True)
+"""

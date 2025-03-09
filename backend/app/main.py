@@ -12,6 +12,7 @@ app.include_router(routers.invitation_router)
 app.include_router(routers.user_router)
 app.include_router(routers.team_router)
 app.include_router(routers.release_router)
+app.include_router(routers.template_router)
 
 
 @app.get(

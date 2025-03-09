@@ -14,8 +14,9 @@ curl -L \
 
 
 def create_repo_in_org(org_name: str, repo_name: str):
+  github_owner = app_settings.GITHUB_OWNER
   response = requests.post(
-    "https://api.github.com/repos/ituai-deneme/deneme2/generate",
+    f"https://api.github.com/repos/{github_owner}/deneme2/generate",
     json={
       "owner": org_name,
       "name": repo_name,
