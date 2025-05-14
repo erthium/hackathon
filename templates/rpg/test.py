@@ -9,9 +9,9 @@ from libs.test_agent import TestAgent
 RESULSTS_DIR = "/sandbox/results"
 
 
-def test_the_agent(agent_repo: str):
-  path_to_agent = os.path.join(agent_repo, "templates/rpg/libs")  # "src")
-  module_name = "agent.py"
+def test_the_agent(agent_repo: str) -> bool:
+  path_to_agent = os.path.join(agent_repo, "src")
+  module_name = "agent"
   attribute_name = "Agent"
 
   # Runs the engine, catches any errors and writes the result to the result.json file
