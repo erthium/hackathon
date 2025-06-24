@@ -1,14 +1,7 @@
-from functools import lru_cache
+from fastapi import Depends
 from typing import Annotated
 
-from app.tasks import TaskManager
-from fastapi import Depends
-
-
-@lru_cache  # to always get the same singleton TaskManager instance
-def get_task_manager() -> TaskManager:
-  task_manager = TaskManager(max_tasks=1)
-  return task_manager
+from app.services import TaskManager, get_task_manager
 
 
 TaskManagerDep = Annotated[TaskManager, Depends(get_task_manager)]

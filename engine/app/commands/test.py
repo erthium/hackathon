@@ -7,7 +7,7 @@ import time
 
 from app.objects.engine import EngineTestFailedResult, EngineTestResult
 from app.sandbox import build_and_run_sandbox
-from app.settings import app_settings
+from engine.app.core.settings import app_settings
 from pydantic import TypeAdapter, ValidationError
 
 
@@ -64,7 +64,7 @@ async def test(repo_owner: str, repo_name: str, commit_id: str) -> EngineTestRes
 
     await docker_compose_up_process.wait()
 
-  # Some Windows problems if I remember correctly
+  # Some Windows problems if I remember correctly (when will this code run on Windows exactly xD)
   def on_rmtree_exc(func, path, exc_info):
     os.chmod(path, stat.S_IWUSR)
     func(path)
