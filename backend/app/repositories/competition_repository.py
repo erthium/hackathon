@@ -3,19 +3,19 @@ Competition Repository: This repository will be used to interact with the databa
 """
 
 import datetime
-from typing import Optional
+from typing import Optional, Dict
 from uuid import UUID
 
-from app.dependencies.database import database_dep
+from app.dependencies.database import DatabaseDep
 from app.entities import Competition
 
 
 class CompetitionRepository:
-  def __init__(self, db: database_dep):
+  def __init__(self, db: DatabaseDep):
     self.db = db
 
   def create(
-    self, name: str, start_date: datetime.datetime, end_date: datetime.datetime
+    self, name: str, start_date: Optional[datetime.datetime] = None, end_date: Optional[datetime.datetime] = None
   ) -> Competition:
     competition = Competition(
       name=name,
@@ -43,6 +43,18 @@ class CompetitionRepository:
   def get_all(self) -> list[Competition]:
     return self.db.query(Competition).all()
 
+  def get_all_with_template_names(self) -> Dict[UUID, str]:
+    competitions = self.db.query(Competition.id, Competition.template_name).all()
+    return {competition_id: template_name for competition_id, template_name in competitions}
 
-def get_competition_repository(db: database_dep) -> CompetitionRepository:
+  def nullify_all_template_names(self):
+    self.db.query(Competition).update({Competition.template_name: None})
+    self.db.commit()
+
+  def bring_back_template_names(self, template_names: Dict[UUID, str]):
+    for competition_id, template_name in template_names.items():
+      self.db.query(Competition).filter(Competition.id == competition_id).update({Competition.template_name: template_name})
+    self.db.commit()
+
+def get_competition_repository(db: DatabaseDep) -> CompetitionRepository:
   return CompetitionRepository(db)

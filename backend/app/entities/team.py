@@ -28,6 +28,7 @@ Registration Date (UTC)
 class Team(Base, IdMixin, AuditMixin):
   __tablename__ = "teams"
 
+  # Columns
   competition_id: Mapped[uuid.UUID] = mapped_column(
     ForeignKey(
       "competitions.id",
@@ -40,6 +41,7 @@ class Team(Base, IdMixin, AuditMixin):
     server_default=func.now(), init=False
   )
 
+  # Relationships
   competition: Mapped["Competition"] = relationship(
     back_populates="teams", foreign_keys=[competition_id], init=False
   )
@@ -52,6 +54,7 @@ class Team(Base, IdMixin, AuditMixin):
   releases: Mapped[list["Release"]] = relationship(
     back_populates="team", default_factory=list, init=False
   )
+
 
   __table_args__ = (
     # Team name should be unique for each competition

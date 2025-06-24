@@ -3,3 +3,7 @@ from .invitation_repository import InvitationRepository, get_invitation_reposito
 from .release_repository import ReleaseRepository, get_release_repository
 from .team_repository import TeamRepository, get_team_repository
 from .user_repository import UserRepository, get_user_repository
+from .template_repository import TemplateRepository, get_template_repository
+from .command_repository import CommandRepository, get_command_repository
+from .score_metric_repository import ScoreMetricRepository, get_score_metric_repository
+from .score_repository import ScoreRepository, get_score_repository
