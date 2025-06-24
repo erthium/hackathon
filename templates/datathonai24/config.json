@@ -15,5 +15,27 @@
       "allocated_cpu": 1,
       "timeout": 60
     }
-  }
+  },
+  "on_submission_command": "evaluate",
+  "on_competition_end_command": null,
+  "scores": {
+    "rmse_haversine_public": {
+      "description": "Root Mean Square Error of Haversine distance on the public test set",
+      "type": "float",
+      "sort_order": "asc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true,
+      "is_public": true
+    },
+    "rmse_haversine_private": {
+      "description": "Root Mean Square Error of Haversine distance on the private test set",
+      "type": "float",
+      "sort_order": "asc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true,
+      "is_public": false
+    }
+  }    
 }

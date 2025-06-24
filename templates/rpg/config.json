@@ -25,5 +25,17 @@
       "allocated_cpu": 1,
       "timeout": 60
     }
+  },
+  "on_submission_command": "test",
+  "on_competition_end_command": "evaluate",
+  "scores": {
+    "elo": {
+      "description": "Elo rating of the player",
+      "type": "float",
+      "sort_order": "desc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true
+    }
   }
 }

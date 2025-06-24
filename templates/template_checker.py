@@ -1,11 +1,11 @@
 """
 This is a standalone script to see the current templates and if they obey the rules.
-Mostly will be used to check if the config.json is in the correct format and has correct/existing values.
+Mostly will be used to check if the config.yaml is in the correct format and has correct/existing values.
 """
 
 import os
-import json
-from typing import List
+import yaml
+from typing import List, Optional, Union
 
 
 # Constants
@@ -14,13 +14,15 @@ SCRIPT_FILE: str = os.path.abspath(__file__)
 TEMPLATE_DIRECTORY: str = os.path.dirname(SCRIPT_FILE)
 
 ## Config keys and values
-CONFIG_FILENAME: str = "config.json" 
+CONFIG_FILENAME: str = "config.yaml"
 GENERIC_CONFIG_KEYS: dict = {
   "name": str,
   "description": str,
   "version": str,
   "author": str,
-  "user_template_dir": str
+  "user_template_dir": str,
+  "on_submission_command": str,
+  "on_competition_end_command": Optional[str],
 }
 COMMANDS_KEY: str = "commands"
 REQUIRED_COMMAND_KEYS: dict = {
@@ -31,6 +33,16 @@ REQUIRED_COMMAND_KEYS: dict = {
   "allocated_v_ram": int,
   "allocated_cpu": int
 }
+SCORES_KEY: str = "score_metrics"
+REQUIRED_SCORE_KEYS: dict = {
+  "description": str,
+  "type": str,
+  "is_ascending": bool,
+  "is_primary": bool,
+  "is_public": bool,
+  "min_value": Union[int, float, None],
+  "max_value": Union[int, float, None],
+}
 
 
 def validate_template(template_dir: str, verbose: bool = False) -> bool:
@@ -40,17 +52,17 @@ def validate_template(template_dir: str, verbose: bool = False) -> bool:
     print("-" * 50)
     print(f"Template: {os.path.basename(template_dir)}")
 
-  # Check if the template directory has a config.json file
+  # Check if the template directory has a config.yaml file
   config_file_path: str = os.path.join(template_dir, CONFIG_FILENAME)
   if not os.path.exists(config_file_path):
     if verbose:
       print(f"Missing {CONFIG_FILENAME}\n")
     return False
   
-  # Check if the config.json file is in the correct format
+  # Check if the config.yaml file is in the correct format
   try:
     with open(config_file_path, "r") as f:
-      config: dict = json.load(f)
+      config: dict = yaml.safe_load(f)
 
       # Check if the config has the correct keys and values
       for key, value in GENERIC_CONFIG_KEYS.items():
@@ -71,9 +83,22 @@ def validate_template(template_dir: str, verbose: bool = False) -> bool:
               continue
             if not isinstance(command[key], value):
               messages.append(f"Expected {key} to be of type {value.__name__}, got {type(command[key]).__name__}")
+      
+      # Check if the scores are in the correct format
+      if SCORES_KEY not in config:
+        messages.append(f"Missing key: {SCORES_KEY}")
+      else:
+        for score_name, score in config[SCORES_KEY].items():
+          for key, value in REQUIRED_SCORE_KEYS.items():
+            if key not in score:
+              messages.append(f"Missing key: {key} in score: {score_name}")
+              continue
+            if not isinstance(score[key], value):
+              messages.append(f"Expected {key} to be of type {value}, got {type(score[key]).__name__}")
 
-  except json.JSONDecodeError:
-    messages.append(f"Invalid JSON format in {CONFIG_FILENAME}")
+
+  except yaml.YAMLError:
+    messages.append(f"Invalid YAML format in {CONFIG_FILENAME}")
 
   except Exception as exception:
     messages.append(f"Unhandled error: {exception}")
@@ -85,10 +110,10 @@ def validate_template(template_dir: str, verbose: bool = False) -> bool:
 
 
 def get_command_exec(template_dir: str, command_name: str, args: List[str] = []) -> str:
-  # get command list from config.json
+  # get command list from config.yaml
   config_file_path: str = os.path.join(template_dir, CONFIG_FILENAME)
   with open(config_file_path, "r") as f:
-    config: dict = json.load(f)
+    config: dict = yaml.safe_load(f)
     commands = config.get(COMMANDS_KEY, {})
     command = commands.get(command_name, None)
     assert command, f"Command {command_name} not found in {config_file_path}"
