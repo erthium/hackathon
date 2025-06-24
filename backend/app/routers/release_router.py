@@ -1,6 +1,6 @@
 import traceback
 
-from app.dependencies.release_service import release_service_dep
+from app.dependencies.release_service import ReleaseServiceDep
 from app.objects.release import GetAllResponse
 from app.utils import ErrorUtils
 from fastapi import APIRouter, Request
@@ -17,7 +17,7 @@ router = APIRouter(
 )
 async def get_all_releases(
   request: Request,
-  release_service: release_service_dep,
+  release_service: ReleaseServiceDep,
 ) -> GetAllResponse:
   try:
     return release_service.get_all()

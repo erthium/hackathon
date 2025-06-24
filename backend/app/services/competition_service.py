@@ -1,17 +1,18 @@
-from typing import List
+import datetime
+from uuid import UUID
+from typing import List, Optional
+
 
 import requests
 from app.core.settings import app_settings
-from app.dependencies import database_dep
+from app.dependencies.database import DatabaseDep
 from app.entities import Competition, Team
 from app.objects.competition import (
-  AddTeamsRequest,
-  CompetitionInfo,
-  CreateCompetitionRequest,
-  FinishCompetitionRequest,
-  GetAllResponse,
+  NecessaryTeamInfo,
   NecessaryUserInfo,
-  StartCompetitionRequest,
+  CompetitionInfo,
+  CreateCompetitionResponse,
+  GetAllResponse,
 )
 from app.objects.enums import CompetitionStatus
 from app.objects.message_response import MessageResponse
@@ -50,21 +51,49 @@ class CompetitionService:
       ]
     )
 
+
   def create(
-    self, create_competition_request: CreateCompetitionRequest
+    self, name: str, start_date: Optional[datetime.datetime], end_date: Optional[datetime.datetime]
   ) -> MessageResponse:
     # ? What about this?
-    self.__competition_repository.create(
-      create_competition_request.name,
-      create_competition_request.start_date,
-      create_competition_request.end_date,
+    new_competition = self.__competition_repository.create(
+      name=name,
+      start_date=start_date,
+      end_date=end_date,
     )
-    return MessageResponse(message="Competition created successfully")
+    return CreateCompetitionResponse(competitions_id=new_competition.id)
 
-  def add_teams(self, add_teams_request: AddTeamsRequest) -> MessageResponse:
-    competition = self.__competition_repository.get_by_id(
-      add_teams_request.competition_id
-    )
+
+  def configure(
+    self,
+    competition_id: UUID,
+    name: Optional[str] = None,
+    start_date: Optional[datetime.datetime] = None,
+    end_date: Optional[datetime.datetime] = None,
+    template_name: Optional[str] = None,
+  ) -> MessageResponse:
+    competition = self.__competition_repository.get_by_id(competition_id)
+    if competition is None:
+      return HTTPException(
+        status_code=404, detail="Competition not found"
+      )
+
+    if name is not None:
+      competition.name = name
+    if start_date is not None:
+      competition.start_date = start_date
+    if end_date is not None:
+      competition.end_date = end_date
+    if template_name is not None:
+      competition.template_name = template_name
+
+    self.__competition_repository.save(competition)
+    return MessageResponse(message="Competition configured successfully")
+
+
+
+  def add_teams(self, competition_id: UUID, teams: List[NecessaryTeamInfo]) -> MessageResponse:
+    competition = self.__competition_repository.get_by_id(competition_id)
 
     # Ensuring the competition exists is useful for the rest
     if competition is None:
@@ -72,7 +101,7 @@ class CompetitionService:
 
     # Check if all the GitHub accounts exist
     non_existent_github_accounts: List[NecessaryUserInfo] = []
-    for team in add_teams_request.teams:
+    for team in teams:
       for user in team.members:
         if not self.__check_if_github_account_exist(user.github_username):
           non_existent_github_accounts.append(user)
@@ -82,7 +111,7 @@ class CompetitionService:
       )
 
     # Create teams and add users to the teams
-    for team in add_teams_request.teams:
+    for team in teams:
       team_entity = self.__team_repository.create(competition.id, team.name)
       for user in team.members:
         self.__user_repository.create(
@@ -91,24 +120,30 @@ class CompetitionService:
 
     return MessageResponse(message="Teams added successfully")
 
-  async def __check_if_github_account_exist(self, github_username) -> bool:
+
+  def __check_if_github_account_exist(self, github_username) -> bool:
     # brkdnmz: Nice :D Nothing interesting but found it cute
     response = requests.get(f"https://api.github.com/users/{github_username}")
     return response.status_code == 200
 
+
   def start(
-    self, start_competition_request: StartCompetitionRequest
+    self, competition_id: UUID, template_repository_owner: str, template_repository_name: str
   ) -> MessageResponse | HTTPException:
     self.__validate_template_repository(
-      start_competition_request.template_repository_owner,
-      start_competition_request.template_repository_name,
+      template_repository_owner,
+      template_repository_name,
     )
     competition = self.__competition_repository.get_by_id(
-      start_competition_request.competition_id
+      competition_id
     )
 
     if competition is None:
-      return MessageResponse(message="Competition not found")
+      return HTTPException(
+        status_code=404, detail="Competition not found"
+      )
+
+    self.__check_if_competition_can_start(competition)
 
     competition.status = CompetitionStatus.ONGOING
     self.__competition_repository.save(competition)
@@ -118,8 +153,8 @@ class CompetitionService:
       errors = self.__create_repo_for_team(
         team,
         competition,
-        start_competition_request.template_repository_owner,
-        start_competition_request.template_repository_name,
+        template_repository_owner,
+        template_repository_name,
       )
       if len(errors) > 0:
         team_action_errors[team.name] = errors
@@ -138,6 +173,22 @@ class CompetitionService:
 
     return MessageResponse(message="Competition started successfully")
 
+
+  def __check_if_competition_can_start(self, competition: Competition) -> None:
+    if competition.status != CompetitionStatus.UPCOMING:
+      raise HTTPException(
+        status_code=400, detail="Competition cannot be started, it is not in the CREATED state"
+      )
+    if competition.template_name is None:
+      raise HTTPException(
+        status_code=400, detail="Competition template is not set, please set it before starting the competition"
+      )
+    if competition.template is None:
+      raise HTTPException(
+        status_code=400, detail="Competition template is set but not found, please set an existing template"
+      )
+
+
   def __validate_template_repository(
     self, template_repository_owner: str, template_repository_name: str
   ) -> None:
@@ -149,8 +200,10 @@ class CompetitionService:
         status_code=400, detail="Template repository does not exist or is private"
       )
 
+
   def __create_repository_name(self, competition: Competition, team: Team) -> str:
     return f"{competition.name}-{team.name}"
+
 
   def __create_repo_for_team(
     self,
@@ -164,24 +217,29 @@ class CompetitionService:
     # Create the repository
     team_repository_name = self.__create_repository_name(competition, team)
     response = GitHubUtils.create_repository_from_template(
-      owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+      owner_name=template_repository_owner,
       repo_name=team_repository_name,
       template_owner=template_repository_owner,
       template_repo=template_repository_name,
     )
     if response.status_code != 200 and response.status_code != 201:
+      print("For creating repostiory: ", response.status_code, response.content)
       errors.append(f"Failed to create repository '{team_repository_name}'")
+    else:
+      team.github_repo = team_repository_name
+      self.__team_repository.save(team)
 
     # Send invitations to the team members
     team_members: List[str] = [user.github_username for user in team.members]
     failed_invitations: List[str] = []
     for member in team_members:
       response = GitHubUtils.invite_collaborator_to_repository(
-        owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+        owner_name=template_repository_owner,
         repo_name=team_repository_name,
         collaborator=member,
       )
       if response.status_code != 200 and response.status_code != 201:
+        print("For invitations: ", response.status_code, response.content)
         failed_invitations.append(member)
     for member in failed_invitations:
       errors.append(
@@ -194,31 +252,32 @@ class CompetitionService:
 
     # Add webhook to the repository
     response = GitHubUtils.add_webhook_to_repository(
-      owner_name=app_settings.GITHUB_ORGANIZATION_NAME,
+      owner_name=template_repository_owner,
       repo_name=team_repository_name,
     )
     if response.status_code != 200 and response.status_code != 201:
+      print("For Webhook: ", response.status_code, response.content)
       errors.append(f"Failed to add webhook to the repository '{team_repository_name}'")
 
     return errors
 
+
   def finish(
-    self, finish_competition_request: FinishCompetitionRequest
+    self, competition_id: UUID
   ) -> MessageResponse:
     competition = self.__competition_repository.get_by_id(
-      finish_competition_request.competition_id
+      competition_id
     )
-
     if competition is None:
       return MessageResponse(message="Competition not found")
 
     competition.status = CompetitionStatus.COMPLETED
     self.__competition_repository.save(competition)
     # TODO: Start the evaluation process
-    return MessageResponse(message="Competition finished successfully")
+    return MessageResponse(message="Competition finished successfully. Evaluation process may take some time.")
 
 
-def get_competition_service(db: database_dep) -> CompetitionService:
+def get_competition_service(db: DatabaseDep) -> CompetitionService:
   return CompetitionService(
     get_competition_repository(db),
     get_team_repository(db),

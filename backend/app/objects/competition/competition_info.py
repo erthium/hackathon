@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from uuid import UUID
 
 from app.objects.enums import CompetitionStatus
+from app.entities.competition import Competition
 
 
 class CompetitionInfo(BaseModel):
@@ -10,7 +11,7 @@ class CompetitionInfo(BaseModel):
   status: CompetitionStatus
 
   @classmethod
-  def from_entity(cls, entity):
+  def from_entity(cls, entity: Competition) -> "CompetitionInfo":
     return cls(
       id=entity.id,
       name=entity.name,

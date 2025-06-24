@@ -1,4 +1,4 @@
-from app.dependencies import database_dep
+from app.dependencies.database import DatabaseDep
 from app.repositories import UserRepository, get_user_repository
 
 
@@ -7,5 +7,5 @@ class UserService:
     self.__user_repository = user_repository
 
 
-def get_user_service(db: database_dep) -> UserService:
+def get_user_service(db: DatabaseDep) -> UserService:
   return UserService(get_user_repository(db))
