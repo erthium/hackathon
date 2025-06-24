@@ -1,0 +1,41 @@
+{
+  "name": "datathonai24",
+  "description": "A template for the past DatathonAI'24 competition",
+  "version": "0.0.1",
+  "author": "itu-ai",
+  "user_template_dir": "user_template",
+  "commands": {
+    "evaluate": {
+      "description": "Evaluating a single repository",
+      "usage": "evaluate <path-to-repo>",
+      "execute": "evaluate.py",
+      "arg_type": "SENDER_REPO",
+      "allocated_ram": 1024,
+      "allocated_v_ram": 1024,
+      "allocated_cpu": 1,
+      "timeout": 60
+    }
+  },
+  "on_submission_command": "evaluate",
+  "on_competition_end_command": null,
+  "scores": {
+    "rmse_haversine_public": {
+      "description": "Root Mean Square Error of Haversine distance on the public test set",
+      "type": "float",
+      "sort_order": "asc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true,
+      "is_public": true
+    },
+    "rmse_haversine_private": {
+      "description": "Root Mean Square Error of Haversine distance on the private test set",
+      "type": "float",
+      "sort_order": "asc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true,
+      "is_public": false
+    }
+  }    
+}

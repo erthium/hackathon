@@ -1,0 +1,41 @@
+{
+  "name": "rpg",
+  "description": "A template for RPG games",
+  "version": "0.0.1",
+  "author": "itu-ai",
+  "user_template_dir": "user_template",
+  "commands": {
+    "test": {
+      "description": "Checking if the submission works correctly",
+      "usage": "test <path-to-repo>",
+      "execute": "test.py",
+      "arg_type": "SENDER_REPO",
+      "allocated_ram": 1024,
+      "allocated_v_ram": 1024,
+      "allocated_cpu": 1,
+      "timeout": 60
+    },
+    "evaluate": {
+      "description": "Finalising the competition and evaluating the submissions according to the rules",
+      "usage": "evaluate +<path-to-repo>",
+      "execute": "evaluate.py",
+      "arg_type": "ALL_REPOS",
+      "allocated_ram": 1024,
+      "allocated_v_ram": 1024,
+      "allocated_cpu": 1,
+      "timeout": 60
+    }
+  },
+  "on_submission_command": "test",
+  "on_competition_end_command": "evaluate",
+  "scores": {
+    "elo": {
+      "description": "Elo rating of the player",
+      "type": "float",
+      "sort_order": "desc",
+      "min_value": 0,
+      "max_value": null,
+      "is_primary": true
+    }
+  }
+}
