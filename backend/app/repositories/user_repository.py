@@ -5,12 +5,12 @@ User Repository: This repository will be used to interact with the database for 
 from typing import Optional
 from uuid import UUID
 
-from app.dependencies.database import database_dep
+from app.dependencies.database import DatabaseDep
 from app.entities import User
 
 
 class UserRepository:
-  def __init__(self, db: database_dep):
+  def __init__(self, db: DatabaseDep):
     self.db = db
 
   def create(
@@ -47,5 +47,5 @@ class UserRepository:
     self.db.commit()
 
 
-def get_user_repository(db: database_dep) -> UserRepository:
+def get_user_repository(db: DatabaseDep) -> UserRepository:
   return UserRepository(db)

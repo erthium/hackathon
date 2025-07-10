@@ -1,4 +1,4 @@
-from app.dependencies import database_dep
+from app.dependencies.database import DatabaseDep
 from app.repositories import InvitationRepository, get_invitation_repository
 
 
@@ -7,5 +7,5 @@ class InvitationService:
     self.__invitation_repository = invitation_repository
 
 
-def get_invitation_service(db: database_dep) -> InvitationService:
+def get_invitation_service(db: DatabaseDep) -> InvitationService:
   return InvitationService(get_invitation_repository(db))

@@ -20,8 +20,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./engine/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy the templates into the sandbox folder
-COPY ./templates ./sandbox/templates
+# Copy the templates into the container
+COPY ./templates ./templates
 
 # https://www.reddit.com/r/docker/comments/1chhie6/whats_up_with_the_dockerfiles_that_use_copy_twice/
 COPY ./engine .

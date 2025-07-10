@@ -26,6 +26,7 @@ Expiration Date (UTC): Optional
 class Invitation(Base, IdMixin, AuditMixin):
   __tablename__ = "invitations"
 
+  # Columns
   user_id: Mapped[uuid.UUID] = mapped_column(
     ForeignKey("users.id"), unique=True, nullable=False
   )
@@ -38,6 +39,7 @@ class Invitation(Base, IdMixin, AuditMixin):
     nullable=True, default=None
   )
 
+  # Relationships
   user: Mapped["User"] = relationship(back_populates="invitation", init=False)
 
   def __repr__(self):

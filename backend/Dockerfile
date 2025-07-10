@@ -18,4 +18,3 @@ RUN apk update && \
 RUN pip install -r requirements.txt
 COPY . .
 CMD alembic upgrade head && fastapi dev --host 0.0.0.0 --port 8000
-

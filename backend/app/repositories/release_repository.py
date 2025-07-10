@@ -6,13 +6,13 @@ import datetime
 from typing import List, Optional, Sequence
 from uuid import UUID
 
-from app.dependencies.database import database_dep
+from app.dependencies.database import DatabaseDep
 from app.entities import Release
 from sqlalchemy import select
 
 
 class ReleaseRepository:
-  def __init__(self, db: database_dep):
+  def __init__(self, db: DatabaseDep):
     self.db = db
 
   def create(
@@ -58,5 +58,5 @@ class ReleaseRepository:
     return self.db.scalars(select(Release)).all()
 
 
-def get_release_repository(db: database_dep) -> ReleaseRepository:
+def get_release_repository(db: DatabaseDep) -> ReleaseRepository:
   return ReleaseRepository(db)

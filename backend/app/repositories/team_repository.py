@@ -5,12 +5,12 @@ Team Repository: This repository will be used to interact with the database for 
 from typing import List, Optional
 from uuid import UUID
 
-from app.dependencies.database import database_dep
+from app.dependencies.database import DatabaseDep
 from app.entities import Competition, Team
 
 
 class TeamRepository:
-  def __init__(self, db: database_dep):
+  def __init__(self, db: DatabaseDep):
     self.db = db
 
   def create(self, competition_id: UUID, name: str) -> Team:
@@ -40,6 +40,9 @@ class TeamRepository:
   def get_by_id(self, team_id: UUID) -> Optional[Team]:
     return self.db.query(Team).filter(Team.id == team_id).first()
 
+  def get_by_repo(self, github_repo: str) -> Optional[Team]:
+    return self.db.query(Team).filter(Team.github_repo == github_repo).first()
+
   def delete(self, team: Team):
     self.db.delete(team)
     self.db.commit()
@@ -48,5 +51,5 @@ class TeamRepository:
     return self.db.query(Team).filter(Team.competition_id == competition_id).all()
 
 
-def get_team_repository(db: database_dep) -> TeamRepository:
+def get_team_repository(db: DatabaseDep) -> TeamRepository:
   return TeamRepository(db)

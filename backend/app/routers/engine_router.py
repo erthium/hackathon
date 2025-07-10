@@ -1,22 +1,29 @@
+import traceback
 from typing import Annotated
-
-from app.dependencies.release_service import release_service_dep
-from app.objects.engine import RunEngineResponse
-from app.objects.enums import ReleaseStatus
-from app.objects.message_response import MessageResponse
 from fastapi import APIRouter, Body
+
+from app.dependencies.release_service import ReleaseServiceDep
+from app.objects.engine import RunCommandResponse
+from app.objects.message_response import MessageResponse
+from app.utils import ErrorUtils
 
 router = APIRouter(prefix="/engine")
 
 
 @router.post("/result", response_model=MessageResponse)
 async def on_engine_result(
-  payload: Annotated[RunEngineResponse, Body()],
-  release_service: release_service_dep,
+  run_command_response: Annotated[RunCommandResponse, Body()],
+  release_service: ReleaseServiceDep,
 ) -> MessageResponse:
-  return release_service.update(
-    payload.id,
-    ReleaseStatus.APPROVED if payload.data.success else ReleaseStatus.REJECTED,
-    payload.data.score if payload.data.success is True else None,
-    payload.data.result if payload.data.success is True else payload.data.error,
-  )
+  try:
+    release_service.handle_on_submission_complete(
+      run_command_response.submission_id,
+      run_command_response.scores,
+      run_command_response.run_command_type,
+      run_command_response.success,
+      run_command_response.error,
+    )
+    return MessageResponse("Release result received successfully")
+  except Exception as exception:
+    traceback.print_exc()
+    raise ErrorUtils.toHTTPException(exception)

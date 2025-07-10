@@ -28,6 +28,7 @@ Registration Date (UTC): Optional
 class User(Base, IdMixin, AuditMixin):
   __tablename__ = "users"
 
+  # Columns
   team_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("teams.id"), nullable=False)
   competition_id: Mapped[uuid.UUID] = mapped_column(
     ForeignKey("competitions.id"), nullable=False
@@ -38,6 +39,7 @@ class User(Base, IdMixin, AuditMixin):
   password: Mapped[Optional[str]] = mapped_column(nullable=True, unique=True)
   registration_date: Mapped[Optional[datetime.datetime]] = mapped_column(nullable=True)
 
+  # Relationships
   invitation: Mapped["Invitation"] = relationship(back_populates="user", init=False)
   team: Mapped["Team"] = relationship(back_populates="members", init=False)
 

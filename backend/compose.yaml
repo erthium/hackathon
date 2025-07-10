@@ -20,7 +20,6 @@ services:
       - .env
     ports:
       - "${DB_PORT}:5432"
-
   cache:
     # https://geshan.com.np/blog/2022/01/redis-docker/
     image: redis:7.4-alpine

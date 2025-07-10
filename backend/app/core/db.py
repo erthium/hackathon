@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 from app.core.settings import app_settings
 
-engine = create_engine(app_settings.DB_URL, echo=True)
+engine = create_engine(app_settings.DB_URL, echo=False)
 
 SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 SessionLocal = scoped_session(SessionFactory)

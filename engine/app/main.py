@@ -1,27 +1,23 @@
-from typing import Annotated
-
-from app.dependencies import TaskManagerDep
-from app.objects.engine import RunEnginePayload
-from app.tasks import run_fake_test, run_test
 from fastapi import Body, FastAPI
+
+from app.routers import (
+  command_router,
+  template_router,
+)
+
 
 app = FastAPI()
 
+# Include routers
+app.include_router(command_router)
+app.include_router(template_router)
 
-@app.post("/run", response_model=str)
-async def run_engine(
-  payload: Annotated[RunEnginePayload, Body()], task_manager: TaskManagerDep
-) -> str:
-  match payload.type:
-    case "test":
-      task_manager.enqueue_task(
-        lambda: run_test(payload.repo_owner, payload.repo_name, payload.commit_id)
-      )
-      return "Results will be sent soon"
-    case "evaluate":
-      return "Evaluation is not supported yet"
-    case "fake_test":
-      task_manager.enqueue_task(run_fake_test)
-      return "Results will be sent soon"
-    case _:
-      return "Unknown payload type"
+
+@app.get(
+  "/",
+  summary="Root",
+  description="Root endpoint",
+  response_description="Beneath this mask, there is more than flesh...",
+)
+def get_root():
+  return "V"  # V for Vendetta
