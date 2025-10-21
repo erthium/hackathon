@@ -22,6 +22,14 @@ class TeamService:
     return team
 
 
+  def can_team_make_submission(self, team: Team) -> bool:
+    dailly_submission_limit = team.competition.daily_submission_limit
+    extra_submission_for_the_team = team.extra_submission_count or 0
+    total_daily_limit = dailly_submission_limit + extra_submission_for_the_team
+    releases_today = self.__release_repository.get_release_count_today(team.id)
+    return releases_today < total_daily_limit
+
+
 def get_team_service(db: DatabaseDep) -> TeamService:
   return TeamService(
     get_team_repository(db),

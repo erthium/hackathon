@@ -6,8 +6,8 @@ from app.objects.enums import RunCommandType
 
 
 class RunCommandRequest(BaseModel):
-  submission_id: UUID
+  command_run_id: UUID
   run_command_type: RunCommandType
   template_name: str
-  command: str
+  command_name: str
   args: List[str]

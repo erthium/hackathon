@@ -31,6 +31,9 @@ async def build_and_run_sandbox(template_name: str, command_name: str, args: Lis
     "-f",
     SANDBOX_COMPOSE_FILE_LOCATION,
     "build",
+    "--build-arg", f"TEMPLATE_NAME={template_name}",
+    "--build-arg", f"COMMAND_NAME={command_name}",
+    "--build-arg", f"ARGS={','.join(args)}",
     # "--no-cache", # TODO(brkdnmz): I assume this is not needed
     stdout=asyncio.subprocess.PIPE,
     stderr=asyncio.subprocess.PIPE,
@@ -39,6 +42,10 @@ async def build_and_run_sandbox(template_name: str, command_name: str, args: Lis
   # Using process.wait() alone may cause deadlock:
   # https://docs.python.org/3/library/asyncio-subprocess.html#:~:text=the%20returncode%20attribute.-,Note,-This%20method%20can
   stdout, stderr = await build_process.communicate()
+
+  print("🔧 Docker Build STDOUT:\n", stdout.decode(), flush=True)
+  print("🛠️ Docker Build STDERR:\n", stderr.decode(), flush=True)
+
   await build_process.wait()  # Wait until finished completely
 
   if build_process.returncode != 0:  # Build failed
@@ -54,12 +61,12 @@ async def build_and_run_sandbox(template_name: str, command_name: str, args: Lis
     "-f",
     SANDBOX_COMPOSE_FILE_LOCATION,
     "up",
-    "-e", f"TEMPLATE_NAME={template_name}",
-    "-e", f"COMMAND_NAME={command_name}",
-    "-e", f"ARGS={','.join(args)}",
     stdout=asyncio.subprocess.PIPE,
     stderr=asyncio.subprocess.PIPE,
   )
+
+  print("🔧 Docker Run STDOUT:\n", stdout.decode(), flush=True)
+  print("🛠️ Docker Run STDERR:\n", stderr.decode(), flush=True)
 
   ### This was a testing code that I planned the use for the demo.
   ### It might be useful in the future, but for now, it'd better be commented out.

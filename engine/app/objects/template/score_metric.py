@@ -6,7 +6,6 @@ from typing import Optional
 class ScoreMetric:
   name: str
   description: str
-  type: str
   is_ascending: bool
   is_primary: bool
   is_public: bool

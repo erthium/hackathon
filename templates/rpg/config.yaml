@@ -8,6 +8,7 @@ commands:
     description: Checking if the submission works correctly
     usage: test <path-to-repo>
     execute: test.py
+    command_run_type: SEPARATE_DOCKER
     arg_type: SENDER_REPO
     allocated_ram: 1024
     allocated_v_ram: 1024
@@ -17,6 +18,7 @@ commands:
     description: Finalising the competition and evaluating the submissions according to the rules
     usage: evaluate +<path-to-repo>
     execute: evaluate.py
+    command_run_type: SEPARATE_DOCKER
     arg_type: ALL_REPOS
     allocated_ram: 1024
     allocated_v_ram: 1024

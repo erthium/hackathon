@@ -10,3 +10,4 @@ from .template import Template  # noqa: F401
 from .command import Command  # noqa: F401
 from .score_metric import ScoreMetric  # noqa: F401
 from .score import Score  # noqa: F401
+from .command_run import CommandRun  # noqa: F401

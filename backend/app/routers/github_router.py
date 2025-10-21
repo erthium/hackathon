@@ -1,9 +1,7 @@
-import uuid
 import httpx
 from typing import Annotated, Any
 from urllib.parse import urljoin
 from fastapi import APIRouter, Body, Header, Request
-
 
 from app.logger import logger
 from app.core.settings import app_settings
@@ -49,7 +47,7 @@ async def handle_webhook_delivery(
 
       if push_event.head_commit.message.startswith("release"):
         team = team_service.get_team_by_repo(push_event.repository.name)
-        release = release_service.create_by_push_event(team.id, push_event)
+        command_run = release_service.create_command_run_by_push_event(team.id, push_event)
         template = team.competition.template
 
         if template.on_submission_command is None:
@@ -80,10 +78,10 @@ async def handle_webhook_delivery(
         args = [repo_arg,]
 
         engine_payload = RunCommandRequest(
-          submission_id=release.id,
+          command_run_id=command_run.id,
           run_command_type=RunCommandType.ON_SUBMISSION,
           template_name=template.name,
-          command=command.name,
+          command_name=command.name,
           args=args,
         )
 

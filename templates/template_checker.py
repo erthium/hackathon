@@ -1,6 +1,8 @@
 """
 This is a standalone script to see the current templates and if they obey the rules.
 Mostly will be used to check if the config.yaml is in the correct format and has correct/existing values.
+Does not used to validate the template while running it anymore,
+A very similar proportion of the code is used within the template_service in the engine for that.
 """
 
 import os
@@ -12,6 +14,9 @@ from typing import List, Optional, Union
 ## Paths
 SCRIPT_FILE: str = os.path.abspath(__file__)
 TEMPLATE_DIRECTORY: str = os.path.dirname(SCRIPT_FILE)
+
+print(f"Script file: {SCRIPT_FILE}")
+print(f"Template directory: {TEMPLATE_DIRECTORY}")
 
 ## Config keys and values
 CONFIG_FILENAME: str = "config.yaml"
@@ -36,7 +41,6 @@ REQUIRED_COMMAND_KEYS: dict = {
 SCORES_KEY: str = "score_metrics"
 REQUIRED_SCORE_KEYS: dict = {
   "description": str,
-  "type": str,
   "is_ascending": bool,
   "is_primary": bool,
   "is_public": bool,
@@ -56,7 +60,7 @@ def validate_template(template_dir: str, verbose: bool = False) -> bool:
   config_file_path: str = os.path.join(template_dir, CONFIG_FILENAME)
   if not os.path.exists(config_file_path):
     if verbose:
-      print(f"Missing {CONFIG_FILENAME}\n")
+      print(f"Missing {CONFIG_FILENAME}, must be in {config_file_path}\n")
     return False
   
   # Check if the config.yaml file is in the correct format

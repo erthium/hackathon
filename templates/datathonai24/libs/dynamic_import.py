@@ -3,6 +3,8 @@ import sys
 import importlib.util
 from typing import Type
 
+import subprocess
+
 
 def import_module(module_dir: str, module_name: str) -> importlib.util.types.ModuleType:
   """
@@ -17,10 +19,28 @@ def import_module(module_dir: str, module_name: str) -> importlib.util.types.Mod
 
   # Construct the path to the module
   module_path = os.path.join(module_dir, module_name)
-  if not os.path.isfile(module_path):
-    raise FileNotFoundError(f"Module not found in {module_path}.")
+  module_file = f"{module_path}.py"
+  if not os.path.isfile(module_file):
+    raise FileNotFoundError(f"Module not found in {module_file}.")
 
-  spec = importlib.util.spec_from_file_location(module_name, module_path)
+  # For debugging purposes
+  print(f"Importing module '{module_name}' from '{module_dir}'", flush=True)
+  process = subprocess.run(
+    ["ls", "-l", ],
+    cwd=module_dir,
+    capture_output=True,
+  )
+  print(f"Contents of {module_dir}:\n{process.stdout.decode()}", flush=True)
+
+  process = subprocess.run(
+    ["cat", module_file],
+    capture_output=True,
+  )
+  print(f"Contents of {module_file}:\n{process.stdout.decode()}", flush=True)
+
+
+  spec = importlib.util.spec_from_file_location(module_name, module_file)
+
   imported_module = importlib.util.module_from_spec(spec)
   sys.modules[module_name] = imported_module
   spec.loader.exec_module(imported_module)

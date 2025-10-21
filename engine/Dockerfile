@@ -20,11 +20,14 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY ./engine/requirements.txt .
 RUN pip install -r requirements.txt
 
+# https://www.reddit.com/r/docker/comments/1chhie6/whats_up_with_the_dockerfiles_that_use_copy_twice/
+COPY ./engine .
+
 # Copy the templates into the container
 COPY ./templates ./templates
 
-# https://www.reddit.com/r/docker/comments/1chhie6/whats_up_with_the_dockerfiles_that_use_copy_twice/
-COPY ./engine .
+# Create the /sandbox/repo directory if it doesn't exist
+RUN mkdir -p ./sandbox/repo
 
 EXPOSE $ENGINE_PORT
 

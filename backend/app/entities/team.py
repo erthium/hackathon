@@ -1,6 +1,7 @@
+import uuid
 import datetime
 import typing
-import uuid
+from typing import Optional
 
 from sqlalchemy import ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -22,6 +23,7 @@ Competition ID: UUID, Foreign Key
 Team Name: Predecided before invitation, unique for each competition
 GitHub Repository: Unique
 Registration Date (UTC)
+Extra submission count: Optional int
 """
 
 
@@ -40,6 +42,9 @@ class Team(Base, IdMixin, AuditMixin):
   registration_date: Mapped[datetime.datetime] = mapped_column(
     server_default=func.now(), init=False
   )
+  extra_submission_count: Mapped[Optional[int]] = mapped_column(
+    default=None, nullable=True, init=False
+  )
 
   # Relationships
   competition: Mapped["Competition"] = relationship(
@@ -53,7 +58,7 @@ class Team(Base, IdMixin, AuditMixin):
   )
   releases: Mapped[list["Release"]] = relationship(
     back_populates="team", default_factory=list, init=False
-  )
+  ) 
 
 
   __table_args__ = (

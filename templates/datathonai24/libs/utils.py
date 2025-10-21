@@ -3,6 +3,7 @@ This script curates the functions that are used in the template
 """
 
 import os
+import json
 
 from dynamic_import import import_attribute
 
@@ -11,6 +12,7 @@ MODULE_DIR = "src"
 MODULE_NAME = "main"
 ATTRIBUTE_NAME = "predict"
 REQUIRED_FILES_IN_ROOT = ["requirements.txt"]
+RESULT_FILE_PATH = "/sandbox/results/result.json"
 
 
 def directory_checks(repository_path: str):
@@ -30,3 +32,12 @@ def get_predict_from_repo(repository_path: str) -> callable:
   return predict
 
 
+def write_command_result(result: dict) -> None:
+  """
+  Write the command result to a file
+  """
+  print("Writing command result to sandbox/results/result.json", flush=True)
+  print(f"Result: {result}", flush=True)
+  with open(RESULT_FILE_PATH, "w") as result_file:
+    json.dump(result, result_file, indent=2)
+    print("Command result written to sandbox/results/result.json")

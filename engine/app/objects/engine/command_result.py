@@ -1,17 +1,17 @@
-from typing import List, Literal, Annotated
+from typing import List, Dict, Literal, Annotated
 from pydantic import BaseModel, Field
 
 
 class CommandSuccessResult(BaseModel):
   success: Literal[True] = True
-  scores: List[float]
+  scores: Dict[str, float] = {}
   warning: List[str] = []
 
 
 class CommandFailResult(BaseModel):
   success: Literal[False] = False
   error: str
-  Warning: List[str] = []
+  warning: List[str] = []
 
 
 type CommandResult = Annotated[

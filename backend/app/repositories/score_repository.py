@@ -16,12 +16,12 @@ class ScoreRepository:
   def create(
     self,
     score_metric_id: UUID,
-    team_id: UUID,
+    command_run_id: UUID,
     value: float,
   ) -> Score:
     score = Score(
       score_metric_id=score_metric_id,
-      team_id=team_id,
+      command_run_id=command_run_id,
       value=value,
     )
     self.db.add(score)

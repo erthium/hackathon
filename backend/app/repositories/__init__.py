@@ -7,3 +7,4 @@ from .template_repository import TemplateRepository, get_template_repository
 from .command_repository import CommandRepository, get_command_repository
 from .score_metric_repository import ScoreMetricRepository, get_score_metric_repository
 from .score_repository import ScoreRepository, get_score_repository
+from .command_run_repository import CommandRunRepository, get_command_run_repository

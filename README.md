@@ -31,8 +31,6 @@ docker compose logs -f service_name
 Since the GitHub Webhooks require a public domain, the easiest solution to test in local is to use ngrok with it's free static domain and have it pointing to your backend server.
 
 
-
-
 ## Conventions
 
 **Branches**: `main` is the main branch, for the stable version of the project. `dev` is the development branch, where the new features are implemented.

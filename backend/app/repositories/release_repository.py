@@ -3,12 +3,13 @@ Release Repository: This repository will be used to interact with the database f
 """
 
 import datetime
-from typing import List, Optional, Sequence
 from uuid import UUID
+from sqlalchemy import select
+from typing import List, Optional, Sequence
 
 from app.dependencies.database import DatabaseDep
 from app.entities import Release
-from sqlalchemy import select
+from app.utils import TimeUtils
 
 
 class ReleaseRepository:
@@ -51,6 +52,25 @@ class ReleaseRepository:
 
   def get_all_by_team_id(self, team_id) -> List[Release]:
     return self.db.query(Release).filter(Release.team_id == team_id).all()
+
+  def get_release_count_today(self, team_id: UUID) -> int:
+    today = TimeUtils.get_datetime_today()
+    return (
+      self.db.query(Release)
+      .filter(
+        Release.team_id == team_id,
+        Release.release_date >= today,
+        Release.release_date < today + datetime.timedelta(days=1),
+      )
+      .count()
+    )
+
+  def get_total_release_count(self, team_id: UUID) -> int:
+    return (
+      self.db.query(Release)
+      .filter(Release.team_id == team_id)
+      .count()
+    )
 
   def get_all(self) -> Sequence[Release]:
     # The SQLAlchemy 2.0 way:

@@ -17,13 +17,13 @@ async def on_engine_result(
 ) -> MessageResponse:
   try:
     release_service.handle_on_submission_complete(
-      run_command_response.submission_id,
+      run_command_response.command_run_id,
       run_command_response.scores,
       run_command_response.run_command_type,
       run_command_response.success,
       run_command_response.error,
     )
-    return MessageResponse("Release result received successfully")
+    return MessageResponse(message="Release result received successfully")
   except Exception as exception:
     traceback.print_exc()
     raise ErrorUtils.toHTTPException(exception)

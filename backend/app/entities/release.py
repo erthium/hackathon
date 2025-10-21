@@ -12,7 +12,7 @@ from .mixins import AuditMixin, IdMixin
 
 if typing.TYPE_CHECKING:
   from .team import Team
-  from .score import Score
+  from .command_run import CommandRun
 
 """
 Release information:
@@ -36,20 +36,19 @@ class Release(Base, IdMixin, AuditMixin):
   status: Mapped[ReleaseStatus] = mapped_column(
     default=ReleaseStatus.PENDING, init=False
   )
-  message: Mapped[Optional[str]] = mapped_column(
-    nullable=True, default=None, init=False
-  )
+  # Should be provided by GitHub's webhook
   release_date: Mapped[datetime.datetime] = (
     mapped_column()
-  )  # Should be provided by GitHub's webhook
+  )
 
   # Relationships
   team: Mapped["Team"] = relationship(
     back_populates="releases", init=False
   )
-  scores: Mapped[list["Score"]] = relationship(
+  command_runs: Mapped[list["CommandRun"]] = relationship(
     back_populates="release", default_factory=list, init=False
   )
+
 
   def __repr__(self):
     return f"<Release {self.id} {self.commit_id}>"

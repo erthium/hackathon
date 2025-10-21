@@ -1,7 +1,11 @@
 services:
   sandbox:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ./sandbox/Dockerfile
+      args:
+        TEMPLATE_NAME: "template"
+        COMMAND_NAME: "command"
+        ARGS: "repo1,repo2..."
     volumes:
-      - ./results:/sandbox/results # Bind the results directory to the sandbox container
+      - ./sandbox/results:/sandbox/results # Bind the results directory to the sandbox container

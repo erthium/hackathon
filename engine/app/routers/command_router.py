@@ -27,11 +27,16 @@ async def run_engine(
   command_service: CommandServiceDep
 ) -> MessageResponse:
   try:
-    id = run_command_request.submission_id
-    template = template_service.get_template_by_name(run_command_request.template_name)
-    command = command_service.validate_and_get_command(template, run_command_request.command, run_command_request.args)
+    command_run_id = run_command_request.command_run_id
+    run_command_type = run_command_request.run_command_type
+    template_name = run_command_request.template_name
+    command_name = run_command_request.command_name
+    args = run_command_request.args
+    print(f"For submission with ID '{command_run_id}' running command {command_name} on template {template_name} with args {args}", flush=True)
+    template = template_service.get_template_by_name(template_name)
+    command = command_service.validate_and_get_command(template, command_name, args)
     task_manager.enqueue_task(
-      lambda: run_command(id, template, command, run_command_request.args)
+      lambda: run_command(command_run_id, run_command_type, template, command, args)
     )
     return MessageResponse(message="Command running process started successfully")
   except Exception as exception:

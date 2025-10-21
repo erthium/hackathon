@@ -67,7 +67,6 @@ REQUIRED_COMMAND_KEYS: dict = {
 SCORES_KEY: str = "score_metrics"
 REQUIRED_SCORE_KEYS: dict = {
   "description": str,
-  "type": str,
   "is_ascending": bool,
   "min_value": Union[int, float, None],
   "max_value": Union[int, float, None],
@@ -157,7 +156,6 @@ class TemplateService:
           ScoreMetric(
             name=score_name,
             description=score["description"],
-            type=score["type"],
             is_ascending=score["is_ascending"],
             is_primary=score["is_primary"],
             is_public=score["is_public"],

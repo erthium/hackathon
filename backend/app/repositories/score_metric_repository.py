@@ -48,6 +48,12 @@ class ScoreMetricRepository:
   def get_by_id(self, command_id: UUID) -> Optional[ScoreMetric]:
     return self.db.query(ScoreMetric).filter(ScoreMetric.id == command_id).first()
 
+  def get_by_name(self, template_id: UUID, name: str) -> Optional[ScoreMetric]:
+    return self.db.query(ScoreMetric).filter(
+      ScoreMetric.template_id == template_id,
+      ScoreMetric.name == name
+    ).first()
+
   def delete(self, score_metric: ScoreMetric):
     self.db.delete(score_metric)
     self.db.commit()

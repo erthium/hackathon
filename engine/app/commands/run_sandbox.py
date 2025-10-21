@@ -30,11 +30,13 @@ async def run_sandbox(template: Template, command: Command, args: List[str]) -> 
       "git",
       "clone",
       repo_url,
-      clone_dir,
+      cwd=clone_dir,
     )
     await git_clone_process.wait()
     if git_clone_process.returncode != 0:
       return CommandFailResult(error=f"Failed to clone the repo {repo_url}")
+
+    repo_dir = os.path.join(clone_dir, repo_name)
 
     print("Checking out the commit...", flush=True)
 
@@ -42,12 +44,21 @@ async def run_sandbox(template: Template, command: Command, args: List[str]) -> 
       "git",
       "checkout",
       commit_id,
-      cwd=clone_dir,
+      cwd=repo_dir,
     )
 
     await git_checkout_process.wait()
     if git_checkout_process.returncode != 0:
       return CommandFailResult(error=f"Failed to checkout the commit {commit_id} in the repo {arg}")
+
+  print("Running the sandbox...", flush=True)
+
+  # Prepare args
+  prepared_args = [
+    f"/sandbox/repo/{TemplateUtils.repo_to_args(arg)[1]}"  
+    for arg in args
+  ]
+
 
 
   # There is some timeout error handling logic going on,
@@ -55,7 +66,7 @@ async def run_sandbox(template: Template, command: Command, args: List[str]) -> 
   # Still, no harm keeping these lines here.
   timeout_error = None
   try:
-    docker_compose_up_process: asyncio.subprocess.Process = await build_and_run_sandbox(template.name, command.name, args)
+    docker_compose_up_process: asyncio.subprocess.Process = await build_and_run_sandbox(template.name, command.name, prepared_args)
   except TimeoutError:
     timeout_error = CommandFailResult(error="Time limit exceeded (10s)")
   except Exception as e:
@@ -80,15 +91,45 @@ async def run_sandbox(template: Template, command: Command, args: List[str]) -> 
   # Without this, shutil.rmtree below doesn't work properly
   time.sleep(1)
 
-  shutil.rmtree(clone_dir, onexc=on_rmtree_exc)
+  print("Cleaning up the sandbox directory...", flush=True)
+
+  # Remove everything in the clone_dir, not the directory itself
+  for item in os.listdir(clone_dir):
+    item_path = os.path.join(clone_dir, item)
+    if os.path.isdir(item_path):
+      shutil.rmtree(item_path, onerror=on_rmtree_exc)
+    else:
+      os.remove(item_path)
 
   if timeout_error is not None:
     return timeout_error
 
+  print("Sandbox run completed, checking the results...", flush=True)
+
   if docker_compose_up_process.returncode != 0:
     return CommandFailResult(error=stderr.decode())
 
-  with open("sandbox/results/result.json", "r") as results_file:
+  print("Sandbox run completed successfully, reading the results...", flush=True)
+
+  # Check if the result file exists
+  result_file_path = "sandbox/results/result.json"
+  # list and print the tree of sandbox/results
+  if os.path.exists("sandbox/results"):
+    print("Sandbox results directory contents:", flush=True)
+    for root, dirs, files in os.walk("sandbox/results"):
+      print(f"Directory: {root}", flush=True)
+      for file in files:
+        print(f"  File: {file}", flush=True)
+  else:
+    print("Sandbox results directory does not exist.", flush=True)
+
+  if not os.path.exists(result_file_path):
+    return CommandFailResult(
+      error="The result file does not exist. Make sure the command writes the result to 'sandbox/results/result.json'."
+    )
+  with open(result_file_path, "r") as results_file:
+    all_content = results_file.read()
+    print("All Result Content: ", all_content, flush=True)
     ta: TypeAdapter[CommandResult] = TypeAdapter(CommandResult)
     try:
       result = json.load(results_file)

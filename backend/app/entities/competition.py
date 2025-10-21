@@ -22,6 +22,10 @@ Start Date (UTC): Optional
 End Date (UTC): Optional
 Status: Upcoming (default), Ongoing, Ended
 Winner Team ID: Optional
+Template Name: Optional, Foreign Key to Template
+Selectable Submission Count: Optional int
+Submission Limit: Optional int
+Dailly Submission Limit: Optional int
 """
 
 
@@ -41,6 +45,12 @@ class Competition(Base, IdMixin, AuditMixin):
   # Template name is optional, as competitions can be created without a template and it can be added/changed later
   template_name: Mapped[Optional[str]] = mapped_column(
     ForeignKey("templates.name"), nullable=True, init=False
+  )
+  selectable_submission_count: Mapped[Optional[int]] = mapped_column(
+    default=None, nullable=True, init=False
+  )
+  daily_submission_limit: Mapped[Optional[int]] = mapped_column(
+    default=None, nullable=True, init=False
   )
 
   # Relationships

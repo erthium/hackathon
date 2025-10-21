@@ -3,11 +3,15 @@ description: A template for the past DatathonAI'24 competition
 version: 0.0.1
 author: itu-ai
 user_template_dir: user_template
+dataset:
+  name: test_dataset
+  type: volume
 commands:
   evaluate:
     description: Evaluating a single repository
     usage: evaluate <path-to-repo>
     execute: evaluate.py
+    command_run_type: SAME_DOCKER
     arg_type: SENDER_REPO
     allocated_ram: 1024
     allocated_v_ram: 1024
